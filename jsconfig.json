@@ -1,0 +1,15 @@
+/*
+ * @Descripttion:
+ * @Author: linkenzone
+ * @Date: 2021-01-07 14:46:07
+ */
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

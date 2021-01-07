@@ -2,39 +2,38 @@ import 'antd/dist/antd.css';
 import React, { useState } from 'react';
 import { Layout, Menu, Breadcrumb, Statistic, Row, Col } from 'antd';
 import './main.css';
-import titlepic from '../static/cat.jpg'
+import titlepic from '../static/cat.jpg';
 import { Card, Avatar, List } from 'antd';
 import { connect } from 'umi';
+
 const { Meta } = Card;
 
-
 const MainList = (mainlist) => {
-
   class Mainpage extends React.Component {
     state = {
       collapsed: false,
       file_num: 0,
       checked_num: 0,
       updata_num: 0,
-      data: []
+      data: [],
     };
 
-    onCollapse = collapsed => {
+    onCollapse = (collapsed) => {
       console.log(collapsed);
       this.setState({ collapsed });
     };
 
     test = (e) => {
-      console.log(e)
-    }
+      console.log(e);
+    };
 
     componentDidMount() {
       // console.log(mainlist)
-      if (mainlist.mainlist != undefined) {
+      if (mainlist.mainlist) {
         this.setState({
-          data: mainlist.mainlist.data
-        })
-      };
+          data: mainlist.mainlist.data ? mainlist.mainlist.data : null,
+        });
+      }
     }
 
     render() {
@@ -69,7 +68,7 @@ const MainList = (mainlist) => {
               <List
                 grid={{ gutter: 16, column: 3 }}
                 dataSource={this.state.data}
-                renderItem={item => (
+                renderItem={(item) => (
                   <List.Item>
                     <Card
                       style={{ width: 350 }}
@@ -77,10 +76,11 @@ const MainList = (mainlist) => {
                         // <SettingOutlined key="setting" />,
                         // <EditOutlined key="edit" />,
                         <p onClick={this.test}>编辑</p>,
-                        <p>删除</p>
+                        <p>删除</p>,
                       ]}
                     >
-                      <Meta className="Cardtitle"
+                      <Meta
+                        className="Cardtitle"
                         avatar={<Avatar src={titlepic} />}
                         title={item.file_name}
                         description={item.file_pure_label[0]}
@@ -93,7 +93,6 @@ const MainList = (mainlist) => {
             <br />
             <br />
           </div>
-
         </div>
       );
     }
@@ -102,14 +101,14 @@ const MainList = (mainlist) => {
     <div>
       <Mainpage />
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = ({ mainlist }) => {
-  console.log(mainlist)
+  console.log(mainlist);
   return {
-    mainlist
+    mainlist,
   };
-}
+};
 
-export default connect(mapStateToProps)(MainList)
+export default connect(mapStateToProps)(MainList);
