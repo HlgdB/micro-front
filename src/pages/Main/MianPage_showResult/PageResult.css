@@ -1,0 +1,86 @@
+#components-layout-demo-side .logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+  }
+  .data{
+    transform: translateX(600px);
+  }
+
+  .site-layout .site-layout-background {
+    background: #fff;
+    text-align: right;
+    margin-right: 10px;
+  
+  }
+  .site-layout .site-layout-content {
+    background: #fff;
+    text-align: left;
+    margin-right: 10px;
+  
+  } 
+  .picture{
+    width: 800px;
+    height: 500px;
+    position: relative;
+    float: left;
+    background: yellow;
+    margin-left: 60px;
+  }
+  .List_ifo_1{
+    float: left;
+    margin-left: 20px;
+  }
+  .Tags{
+      margin-top: 70px;
+  }
+
+  .SourceData{
+      margin-top: 30px;
+      max-width: 80%;
+      position: relative;
+      left: 10%;
+  }
+
+  .btn{
+    position: relative;
+    left: 30%;
+    margin-left: 50px;
+  }
+
+  .root {
+    background: #fff;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color:#000;
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    height: 500px;
+  }
+  .swiper-container {
+    width: 100%;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .swiper-slide {
+    background-size: cover;
+    background-position: center;
+  }
+  .gallery-top {
+    height: 80%;
+    width: 100%;
+  }
+  .gallery-thumbs {
+    height: 20%;
+    box-sizing: border-box;
+    padding: 10px 0;
+  }
+  .gallery-thumbs .swiper-slide {
+    height: 100%;
+    opacity: 0.4;
+  }
+  .gallery-thumbs .swiper-slide-thumb-active {
+    opacity: 1;
+  }
