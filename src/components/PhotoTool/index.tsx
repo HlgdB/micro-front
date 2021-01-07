@@ -9,6 +9,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { connect, Dispatch } from 'umi';
+import styles from './style.less';
 
 interface PhotoToolProps {
   dispatch: Dispatch;
@@ -19,11 +20,12 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
 
   return (
     <div>
-      <h1>图片处理工具</h1>
-      <nav id="PhotoTool-header-nav"></nav>
-      <div>
-        <nav id="PhotoTool-header-nav"></nav>
-        <div>图片</div>
+      {/* <h1>图片处理工具</h1> */}
+      <nav id="PhotoTool-header-nav" className={styles.PhotoTool_header_nav}></nav>
+      <div style={{ display: 'flex' }}>
+        <nav id="PhotoTool-left-nav" className={styles.PhotoTool_left_nav}></nav>
+        <div className={styles.PhotoTool_photo_content}></div>
+        <nav id="PhotoTool-right-nav" className={styles.PhotoTool_right_nav}></nav>
       </div>
     </div>
   );
