@@ -38,31 +38,44 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvansSize, setCanvansSize] = useState({ width: 0, height: 0 });
 
+  const [cursor, setCursor] = useState('default');
+
   const [tool, setTool] = useState<number | null>(null);
 
   const [p_list, setP_list] = useState<Point[]>([]);
 
   const [scale, setScale] = React.useState({ x: 1, y: 1 });
 
-  // 初始化函数
-  useEffect(() => {
-    const canvas: any = canvasRef.current;
-
-    let context;
-    if (canvas) {
-      context = canvas.getContext('2d');
-
-      context.lineCap = 'round';
-      context.strokeStyle = 'black';
-      context.lineWidth = 5;
-
-      contextRef.current = context;
-    } else {
-      console.log('未找到canvasRef');
-    }
-  }, []);
-
   // #region canvas帮助函数
+
+  /**
+   * @description: 绘制图片
+   * @Param:
+   * @param {any} image
+   * @param {number} x
+   * @param {number} y
+   */
+  const drawPic = (image: any, x: number, y: number) => {
+    const imageObj = new Image();
+    imageObj.src = 'https://i.pinimg.com/236x/d7/b3/cf/d7b3cfe04c2dc44400547ea6ef94ba35.jpg';
+    contextRef.current.drawImage(imageObj, x, y);
+  };
+
+  /**
+   * @description: 清除选区和画布
+   * @Param:
+   */
+  const clear_selection = () => {
+    contextRef.current.clearRect(
+      0,
+      0,
+      canvasRef.current.clientWidth,
+      canvasRef.current.clientHeight,
+    );
+
+    // 清除所有的坐标点
+    setP_list([]);
+  };
 
   /**
    * @description: 通过坐标绘制点
@@ -195,17 +208,28 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
   //   }
   // };
 
-  const clear_selection = () => {
-    contextRef.current.clearRect(
-      0,
-      0,
-      canvasRef.current.clientWidth,
-      canvasRef.current.clientHeight,
-    );
+  // 初始化函数
+  useEffect(() => {
+    const canvas: any = canvasRef.current;
 
-    // 清除所有的坐标点
-    setP_list([]);
-  };
+    let context;
+    if (canvas) {
+      canvas.width = picRef.current.clientWidth;
+      canvas.height = picRef.current.clientHeight;
+
+      canvas.style.top = -picRef.current.clientHeight;
+
+      context = canvas.getContext('2d');
+
+      context.lineCap = 'round';
+      context.strokeStyle = 'black';
+      context.lineWidth = 5;
+
+      contextRef.current = context;
+    } else {
+      console.log('未找到canvasRef');
+    }
+  }, []);
 
   // #region 画布事件
   const canvas_onMouseDown = ({ nativeEvent }: any) => {
@@ -237,13 +261,13 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
       // 到起始点的距离
 
       // 清空画布
-      contextRef.current.clearRect(0, 0, canvansSize.width, canvansSize.height);
+      contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-      // drawStraightLineByList(p_list);
+      drawStraightLineByList(p_list);
 
       drawSmoothLineByList(p_list);
 
-      // drawPointsLineByList(p_list);
+      drawPointsLineByList(p_list);
     }
   };
 
@@ -254,7 +278,20 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
 
   const canvas_onMouseMove = ({ nativeEvent }: any) => {
     const { offsetX, offsetY } = nativeEvent;
+    console.log('坐标', offsetX, offsetY);
     const p: Point = { x: offsetX, y: offsetY };
+    if (p_list.length > 0) {
+      const dis = Math.sqrt(
+        (p_list[0].x - p.x) * (p_list[0].x - p.x) + (p_list[0].y - p.y) * (p_list[0].y - p.y),
+      );
+      console.log('与第一个点的距离', dis);
+      if (dis < 10) {
+        setCursor('pointer');
+      } else {
+        setCursor('default');
+      }
+    }
+    console.log('坐标', offsetX, offsetY);
   };
 
   const canvas_onMouseOut = ({ nativeEvent }: any) => {
@@ -297,11 +334,11 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
           <div
             style={{
               width: '80%',
-              maxHeight: '500px',
-              position: 'relative',
-              left: '10%',
+              margin: 'auto',
             }}
           >
+            <img src={pic1} alt="pic" ref={picRef} className={styles.PhotoTool_pic} />
+
             <canvas
               id="PhotoTool-Canvas"
               ref={canvasRef}
@@ -310,6 +347,7 @@ const PhotoTool: React.FC<PhotoToolProps> = (props) => {
               onMouseUp={canvas_onMouseUp}
               onMouseMove={canvas_onMouseMove}
               onMouseOut={canvas_onMouseOut}
+              style={{ cursor }}
             ></canvas>
           </div>
 
