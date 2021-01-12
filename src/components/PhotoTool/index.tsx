@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 
 /*
- * @Descripttion: 图片处理的组件
+ * @Descripttion: 图片处理的组件,已经弃用
  * @Author: linkenzone
  * @Date: 2021-01-07 15:59:08
  */

@@ -48,6 +48,10 @@ const BasicLayouts = (props) => {
             <Menu.Item key="test_01">
               <Link to="/main/MainPage_PhotoTool">图片工具</Link>
             </Menu.Item>
+
+            <Menu.Item key="test_02">
+              <Link to="/main/MainPage_ImgRegionTool">图片工具v2</Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu key="sub3" icon={<TeamOutlined />} title="标签管理">
             <Menu.Item key="5">
