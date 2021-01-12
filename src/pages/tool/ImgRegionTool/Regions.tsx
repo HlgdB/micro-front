@@ -42,16 +42,10 @@ const Regions: React.FC<RegionsProps> = (props) => {
               {/* {region.points.map((point: any) => {
                 return <Circle x={point.x} y={point.y} radius={4} fill="black" />;
               })} */}
-              {/* <Rect
-                fill="#ddd"
-                width={regionAttribute.fontSize * 7}
-                height={itemsRef.current[index] ? itemsRef.current[index].height() : null}
-                x={region.points[region.points.length - 1].x}
-                y={region.points[region.points.length - 1].y}
-              /> */}
               <Label
                 x={region.points[region.points.length - 1].x}
                 y={region.points[region.points.length - 1].y}
+                // draggable
               >
                 <Tag fill="#ddd" opacity={0.5} />
                 <Text

@@ -189,12 +189,10 @@ const Canvas: React.FC<CanvasProps> = (props, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgUrl]);
 
-  // useEffect(() => {
-  //   // const container = document.querySelector('.right-panel');
-  //   console.log('imgRegionTool', imgRegionTool);
-  //   stageRef.current.scaleX(imgRegionTool?.StageScale);
-  //   stageRef.current.scaleY(imgRegionTool?.StageScale);
-  // }, [imgRegionTool]);
+  useEffect(() => {
+    // const container = document.querySelector('.right-panel');
+    console.log('imgRegionTool', imgRegionTool);
+  }, [imgRegionTool]);
 
   return (
     <>
