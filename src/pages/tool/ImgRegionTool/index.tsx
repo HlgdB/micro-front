@@ -106,7 +106,11 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
       </div>
       <div id="main_window" style={{ display: 'block' }}>
         <div id="right-panel" style={{ width: 640, marginLeft: 0 }}>
-          <Canvas ref={childRef} imgUrl={imgList[imgIndex]} />
+          <Canvas
+            ref={childRef}
+            imgUrl={imgList[imgIndex]}
+            stageAttribute={{ width: 640, height: 480 }}
+          />
         </div>
 
         <div id="Left-panel" style={{ width: 640, marginTop: 8 }}>

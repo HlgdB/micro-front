@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { Layer, Line, Text, Rect, Circle, Group, Label, Tag } from 'react-konva';
-import ImgRegionTool from '.';
-import { ImgRegionToolDataType } from './data';
 
 interface RegionsProps {
   regions?: any[];
@@ -13,14 +11,7 @@ interface RegionsProps {
 const Regions: React.FC<RegionsProps> = (props) => {
   const layerRef: any = React.useRef(null);
 
-  // const [length, setLength] = React.useState(1);
-  // const itemsRef: any = React.useRef([]);
-
   const { regions, imagePos, regionAttribute } = props;
-
-  // React.useEffect(() => {
-  //   itemsRef.current = itemsRef.current.slice(0, regions?.length);
-  // }, [regions?.length]);
 
   return (
     <Layer ref={layerRef}>
@@ -36,7 +27,7 @@ const Regions: React.FC<RegionsProps> = (props) => {
                 strokeWidth={regionAttribute.strokeWidth}
                 closed // 线条是否封闭?
                 onClick={() => {
-                  console.log('选中:', region.id);
+                  console.log('选中区域:', region.id);
                 }}
               />
               {/* {region.points.map((point: any) => {
@@ -49,7 +40,6 @@ const Regions: React.FC<RegionsProps> = (props) => {
               >
                 <Tag fill="#ddd" opacity={0.5} />
                 <Text
-                  // ref={el => (itemsRef.current[index] = el)}
                   text={region.name}
                   fontSize={regionAttribute.fontSize}
                   fill="blach"

@@ -14,14 +14,6 @@ export interface StateType {
 
 // 初始信息
 const init_data = {
-  StageWidht: 640,
-  StageHeight: 480,
-  StageScale: 1,
-  imageWidth: 100,
-  imageHeight: 100,
-  imageX: 0,
-  imageY: 0,
-  isDrawing: false,
   regions: [],
   maxId: 0,
   toolState: 'default',

@@ -1,18 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Image, Layer } from 'react-konva';
 import { ImgRegionToolDataType } from './data';
 import useImage from 'use-image';
 
 interface BaseImageProps {
-  setImgRegionTool: (payload: any) => void;
   ImgToCenter: (data: any) => any;
-  imgRegionTool?: ImgRegionToolDataType;
+  setImgPos: (data: any) => any;
   stageRef: any;
   imgUrl: string;
 }
 
 const BaseImage: React.FC<BaseImageProps> = (props) => {
-  const { imgRegionTool, setImgRegionTool, ImgToCenter, stageRef, imgUrl } = props;
+  const { ImgToCenter, stageRef, imgUrl, setImgPos } = props;
 
   const [image] = useImage(imgUrl);
 
@@ -24,39 +24,30 @@ const BaseImage: React.FC<BaseImageProps> = (props) => {
     if (!image) {
       return;
     }
-    if (imgRegionTool) {
-      let scale = 1;
-      if (image.width > 640 || image.height > 480) {
-        scale = Math.min(
-          imgRegionTool.StageWidht / image.width,
-          imgRegionTool.StageHeight / image.height,
-        );
-      }
+    const stageWidth = stageRef.current.width();
+    const stageHeight = stageRef.current.height();
 
-      // 图片的宽高比
-      // const ratio = image.width / image.height;
-
-      const { x, y } = ImgToCenter({
-        imageWidth: image.width,
-        imageHeight: image.height,
-        StageWidht: imgRegionTool.StageWidht / scale,
-        StageHeight: imgRegionTool.StageHeight / scale,
-      });
-
-      setImgRegionTool({
-        StageScale: scale,
-        imageWidth: image.width,
-        imageHeight: image.height,
-        imageX: x,
-        imageY: y,
-      });
-
-      stageRef.current.scaleX(scale);
-      stageRef.current.scaleY(scale);
-
-      imgRef.current.setAttrs({ x, y });
+    let scale = 1;
+    if (image.width > 640 || image.height > 480) {
+      scale = Math.min(stageWidth / image.width, stageHeight / image.height);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // 图片的宽高比
+    // const ratio = image.width / image.height;
+
+    const { x, y } = ImgToCenter({
+      imageWidth: image.width,
+      imageHeight: image.height,
+      StageWidht: stageWidth / scale,
+      StageHeight: stageHeight / scale,
+    });
+
+    // 切换画布的缩放
+    stageRef.current.scaleX(scale);
+    stageRef.current.scaleY(scale);
+    // 设置图片的位置
+    imgRef.current.setAttrs({ x, y });
+    setImgPos({ x, y });
   }, [image]);
 
   return (
