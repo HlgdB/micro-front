@@ -48,6 +48,9 @@ const BaseImage: React.FC<BaseImageProps> = (props) => {
     // 设置图片的位置
     imgRef.current.setAttrs({ x, y });
     setImgPos({ x, y });
+
+    // 重新渲染画布
+    stageRef.current.batchDraw();
   }, [image]);
 
   return (

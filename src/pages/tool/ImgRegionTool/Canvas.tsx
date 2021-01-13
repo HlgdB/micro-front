@@ -19,7 +19,7 @@ interface CanvasProps {
   stageAttribute: { width: number; height: number };
 }
 
-const Canvas: React.FC<CanvasProps> | any = (props: any, ref: any) => {
+const Canvas: React.FC<CanvasProps> = (props, ref) => {
   const { imgRegionTool, dispatch, imgUrl, stageAttribute } = props;
 
   // 获取node
@@ -166,6 +166,7 @@ const Canvas: React.FC<CanvasProps> | any = (props: any, ref: any) => {
 
   // 重置图片位置
   useEffect(() => {
+    console.log('初次渲染');
     resetImg();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
