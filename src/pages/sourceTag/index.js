@@ -1,17 +1,12 @@
 import 'antd/dist/antd.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Breadcrumb, Modal } from 'antd';
 import './PageTag.css';
-import pic1 from '../../static/pic1.png';
-import { DatePicker, Space, Button } from 'antd';
+import pic1 from '@/assets/pic1.png';
+import { Space, Button } from 'antd';
 import { List, Tag, Table } from 'antd';
 
-// const { RangePicker } = DatePicker;
-
 const Picdata = ['文件名称：阿巴阿巴阿巴', '创建时间：2020.2.30', '类型：图片'];
-// const { Header, Content, Footer, Sider } = Layout;
-// const { SubMenu } = Menu;
-// const { Meta } = Card;
 
 const columns = [
   {
@@ -38,16 +33,16 @@ const columns = [
 ];
 
 const data = [];
-for (let i = 1; i <= 30; i++) {
+for (let i = 1; i <= 30; i += 1) {
   data.push({
     key: i,
-    name: '名称' + i,
+    name: `名称${i}`,
     describe: `第${i}个图片描述`,
   });
 }
 
-class ShowPic extends React.Component {
-  componentDidMount() {
+const ShowPic = () => {
+  useEffect(() => {
     // for (let i = 1; i <= 10; i++) {
     //     var $div = $("<div></div>");
     //     $div.attr('class', 'swiper-slide');
@@ -79,73 +74,58 @@ class ShowPic extends React.Component {
     //         swiper: galleryThumbs,
     //     },
     // });
-  }
+  }, [1]);
 
-  render() {
-    return (
-      <div className="root">
-        <div className="swiper-container gallery-top">
-          <div className="swiper-wrapper" id="galleryTop"></div>
-          <div className="swiper-button-next swiper-button-white"></div>
-          <div className="swiper-button-prev swiper-button-white"></div>
-        </div>
-        <div className="swiper-container gallery-thumbs">
-          <div className="swiper-wrapper" id="galleryThumbs"></div>
-        </div>
+  return (
+    <div className="root">
+      <div className="swiper-container gallery-top">
+        <div className="swiper-wrapper" id="galleryTop"></div>
+        <div className="swiper-button-next swiper-button-white"></div>
+        <div className="swiper-button-prev swiper-button-white"></div>
       </div>
-    );
-  }
-}
-
-class AddLabel extends React.Component {
-  state = { visible: false };
-
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleCancel = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  render() {
-    return (
-      <div>
-        <Button type="primary" onClick={this.showModal}>
-          添加标签
-        </Button>
-        <Modal
-          title="添加标签"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <div style={{ marginBottom: 10 }}>
-            <img src={pic1} />
-          </div>
-          <Tag color="magenta">magenta</Tag>
-          <Tag color="red">red</Tag>
-          <Tag color="volcano">volcano</Tag>
-          <Tag color="orange">orange</Tag>
-          <Tag color="gold">gold</Tag>
-          <Tag color="lime">lime</Tag>
-        </Modal>
+      <div className="swiper-container gallery-thumbs">
+        <div className="swiper-wrapper" id="galleryThumbs"></div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const AddLabel = () => {
+  const [visible, setvisible] = useState(false);
+
+  const showModal = () => {
+    setvisible(true);
+  };
+
+  const handleOk = (e) => {
+    console.log(e);
+    setvisible(false);
+  };
+
+  const handleCancel = (e) => {
+    console.log(e);
+    setvisible(false);
+  };
+
+  return (
+    <div>
+      <Button type="primary" onClick={showModal}>
+        添加标签
+      </Button>
+      <Modal title="添加标签" visible={visible} onOk={handleOk} onCancel={handleCancel}>
+        <div style={{ marginBottom: 10 }}>
+          <img src={pic1} />
+        </div>
+        <Tag color="magenta">magenta</Tag>
+        <Tag color="red">red</Tag>
+        <Tag color="volcano">volcano</Tag>
+        <Tag color="orange">orange</Tag>
+        <Tag color="gold">gold</Tag>
+        <Tag color="lime">lime</Tag>
+      </Modal>
+    </div>
+  );
+};
 
 class PageTag extends React.Component {
   state = {

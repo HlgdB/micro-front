@@ -1,15 +1,10 @@
 import { Link } from 'umi';
 import 'antd/dist/antd.css';
 import React, { useState } from 'react';
-import {
-  Form,
-  Input,
-  Button
-} from 'antd';
-import titlepic from '../static/cat.jpg'
-import './post.css'
+import { Form, Input, Button } from 'antd';
+import titlepic from '@/assets/cat.jpg';
+import './post.css';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
-
 
 class Post extends React.Component {
   render() {
@@ -18,17 +13,17 @@ class Post extends React.Component {
         <div className="title">
           <img className="pic" src={titlepic} alt="" />
 
-          <font className="projectName" size="5">{"     ".replace(/ /g, "\u00a0")}微生物活镜检测系统</font>
-
+          <font className="projectName" size="5">
+            {'     '.replace(/ /g, '\u00a0')}微生物活镜检测系统
+          </font>
         </div>
         <div className="center-in-center">
-          <font className="projectName" size="3" color="#0099ff" >注册</font>
-          <br /><br />
-          <Form
-            className="post-form"
-            name="register"
-            scrollToFirstError
-          >
+          <font className="projectName" size="3" color="#0099ff">
+            注册
+          </font>
+          <br />
+          <br />
+          <Form className="post-form" name="register" scrollToFirstError>
             <Form.Item
               name="email"
               label=""
@@ -44,12 +39,8 @@ class Post extends React.Component {
               ]}
             >
               <Input prefix={<MailOutlined />} placeholder="注册邮箱" />
-
             </Form.Item>
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: '请输入你的用户名！' }]}
-            >
+            <Form.Item name="username" rules={[{ required: true, message: '请输入你的用户名！' }]}>
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="昵称" />
             </Form.Item>
             <Form.Item
@@ -90,19 +81,17 @@ class Post extends React.Component {
             <div className="Btn">
               <Button className="PostBtn" type="primary" htmlType="submit">
                 注册
-            </Button>
+              </Button>
 
               <Button className="PostBtn" type="link" block>
-                <Link to=''>使用已有账户登录</Link>
-            </Button>
+                <Link to="">使用已有账户登录</Link>
+              </Button>
             </div>
           </Form>
-
         </div>
-
       </div>
     );
   }
 }
 
-export default Post
+export default Post;

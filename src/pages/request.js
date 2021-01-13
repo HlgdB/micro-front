@@ -64,11 +64,6 @@ request.interceptors.request.use(async (url, options) => {
       options: { ...options, headers },
     };
   }
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    Authorization: `Basic ${window.btoa(`${c_token}:`)}`,
-  };
   return {
     url,
     options: { ...options },

@@ -34,7 +34,7 @@
     /* z-index:-10; */
     zoom: 1;
     background-color: #fff; 
-    background: url('../static/2.jpg') no-repeat;
+    background: url('../../static/2.jpg') no-repeat;
     background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
