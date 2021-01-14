@@ -7,7 +7,6 @@ import request from '@/utils/request';
 import Cookies from 'js-cookie';
 
 export const getRemoveList = async () => {
-  console.log(Cookies.get('token'));
   return request(`/video`, {
     method: 'get',
   });

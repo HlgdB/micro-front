@@ -2,7 +2,6 @@ import request from '@/utils/request';
 import Cookies from 'js-cookie';
 
 export const getAllVideo = async () => {
-  console.log('token', Cookies.get('token'));
   return request(`/video`, {
     method: 'get',
   });

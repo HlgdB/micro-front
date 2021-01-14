@@ -55,11 +55,8 @@ const BasicLayouts = (props) => {
             </Menu.Item>
           </SubMenu>
           <SubMenu key="sub3" icon={<TeamOutlined />} title="标签管理">
-            <Menu.Item key="/privateTagList">
-              <Link to="/privateTagList">标签列表-个人</Link>
-            </Menu.Item>
-            <Menu.Item key="/publicTagList">
-              <Link to="/publicTagList">标签列表-公共</Link>
+            <Menu.Item key="/tagList">
+              <Link to="/tagList">标签列表</Link>
             </Menu.Item>
           </SubMenu>
         </Menu>

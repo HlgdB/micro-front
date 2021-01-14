@@ -20,32 +20,3 @@
   text-align: left;
   margin-right: 10px;
 }
-
-.Btn {
-  min-width: 100px;
-}
-
-.Search {
-  position: relative;
-  left: 30%;
-}
-
-#btn4 {
-  position: relative;
-  left: 20%;
-}
-
-#btn3 {
-  position: relative;
-  left: 20%;
-}
-
-#btn2 {
-  position: relative;
-  left: 10%;
-}
-
-#btn1 {
-  position: relative;
-  left: 10%;
-}
