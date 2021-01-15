@@ -4,12 +4,14 @@
  * @Date: 2021-01-11 14:30:12
  */
 
-import { Effect, Reducer } from 'umi';
-
+import { EffectCoverflow } from 'swiper';
+import { Effect, Reducer, Subscription } from 'umi';
+import { getPrivateTag, getPublicTag } from '../../tagList/service';
 import { ImgRegionToolDataType } from './data';
 
 export interface StateType {
   imgRegionTool: ImgRegionToolDataType;
+  tags: any;
 }
 
 // 初始信息
@@ -25,11 +27,14 @@ export interface ModelType {
   namespace: string;
   state: StateType;
   // eslint-disable-next-line @typescript-eslint/ban-types
-  effects: {};
+  effects: {
+    getPrivateTag: Effect;
+  };
   reducers: {
     save: Reducer<StateType>;
     setImgRegionTool: Reducer<StateType>;
   };
+  subscriptions: { setup: Subscription };
 }
 
 const Model: ModelType = {
@@ -37,9 +42,19 @@ const Model: ModelType = {
 
   state: {
     imgRegionTool: init_data,
+    tags: undefined,
   },
 
-  effects: {},
+  effects: {
+    *getPrivateTag(action, { put, call }) {
+      const data = yield call(getPrivateTag);
+      // console.log(data);
+      yield put({
+        type: 'save',
+        payload: { tags: data },
+      });
+    },
+  },
 
   reducers: {
     save(state, { payload }) {
@@ -50,6 +65,18 @@ const Model: ModelType = {
         return { ...state, imgRegionTool: { ...state.imgRegionTool, ...payload } };
       }
       return { imgRegionTool: init_data };
+    },
+  },
+
+  subscriptions: {
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/imgRegionTool') {
+          dispatch({
+            type: 'getPrivateTag',
+          });
+        }
+      });
     },
   },
 };

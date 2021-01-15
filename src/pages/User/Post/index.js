@@ -1,10 +1,11 @@
-import { Link } from 'umi';
+import { Link, history } from 'umi';
 import 'antd/dist/antd.css';
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import titlepic from '@/assets/cat.jpg';
 import './post.css';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import request from '@/utils/request';
 
 class Post extends React.Component {
   render() {
@@ -23,7 +24,28 @@ class Post extends React.Component {
           </font>
           <br />
           <br />
-          <Form className="post-form" name="register" scrollToFirstError>
+          <Form
+            className="post-form"
+            name="register"
+            scrollToFirstError
+            onFinish={(values) => {
+              // console.log("注册信息", { type: 100, ...values })
+              request('/client/register', {
+                method: 'POST',
+                data: { type: 100, ...values },
+              }).then((res) => {
+                console.log('注册结果', res);
+                if (res) {
+                  if (res.code === 200) {
+                    message.success(res.msg);
+                    history.push('/user/login');
+                  }
+                } else {
+                  message.error('注册失败，请检查用户名或邮箱是否重复！');
+                }
+              });
+            }}
+          >
             <Form.Item
               name="email"
               label=""
@@ -40,7 +62,16 @@ class Post extends React.Component {
             >
               <Input prefix={<MailOutlined />} placeholder="注册邮箱" />
             </Form.Item>
-            <Form.Item name="username" rules={[{ required: true, message: '请输入你的用户名！' }]}>
+            <Form.Item
+              name="nickname"
+              rules={[
+                { required: true, message: '请输入你的用户名！' },
+                {
+                  pattern: /^[a-zA-Z0-9_-]{4,16}$/,
+                  message: '昵称包含4到16位(字母，数字,下划线,减号)',
+                },
+              ]}
+            >
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="昵称" />
             </Form.Item>
             <Form.Item
@@ -50,14 +81,18 @@ class Post extends React.Component {
                   required: true,
                   message: '请输入您的密码',
                 },
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,16}$/,
+                  message: '密码至少包含1个大写字母，小写字母，数字和特殊字符!',
+                },
               ]}
               hasFeedback
             >
-              <Input.Password prefix={<LockOutlined />} placeholder="6到16位密码，区分大写小写" />
+              <Input.Password prefix={<LockOutlined />} placeholder="8到16位密码，区分大写小写" />
             </Form.Item>
 
             <Form.Item
-              name="confirm"
+              name="password2"
               dependencies={['password']}
               hasFeedback
               rules={[
@@ -84,7 +119,7 @@ class Post extends React.Component {
               </Button>
 
               <Button className="PostBtn" type="link" block>
-                <Link to="">使用已有账户登录</Link>
+                <Link to="/user/login">使用已有账户登录</Link>
               </Button>
             </div>
           </Form>

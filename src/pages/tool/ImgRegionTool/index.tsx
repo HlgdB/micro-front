@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Button, List, Input, InputNumber, Space } from 'antd';
+import { Button, List, Input, InputNumber, Space, Select } from 'antd';
 
 import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
@@ -12,6 +12,7 @@ import thrImg from '@/assets/13.jpg';
 
 import Canvas from './Canvas';
 
+const { Option } = Select;
 const imgList = [knightImg, RomaImg, thrImg];
 
 interface ImgRegionToolProps {
@@ -20,9 +21,13 @@ interface ImgRegionToolProps {
 }
 
 const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
-  const { imgRegionTool, dispatch } = props;
+  const { imgRegionTool, dispatch, tags } = props;
 
   const [imgIndex, setImgIndex] = useState(0);
+
+  useEffect(() => {
+    console.log(tags);
+  }, [tags]);
 
   const childRef: any = React.useRef();
 
@@ -121,7 +126,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
             renderItem={(region: any, index: number) => (
               <List.Item>
                 <span style={{ width: 40 }}>{region.id}</span>
-                <Input
+                {/* <Input
                   value={region.name}
                   onChange={(e) => {
                     console.log('e', e);
@@ -134,7 +139,26 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
                       });
                     }
                   }}
-                />
+                /> */}
+                <Select
+                  style={{ width: 350 }}
+                  placeholder="选择微生物"
+                  onChange={(e) => {
+                    console.log(e);
+                    if (imgRegionTool) {
+                      region.name = e;
+                      imgRegionTool.regions[index] = region;
+                      dispatch({
+                        type: 'imgRegionTool/setImgRegionTool',
+                        payload: { regions: imgRegionTool.regions },
+                      });
+                    }
+                  }}
+                >
+                  {tags?.map((item: any) => {
+                    return <Option value={item.name}>{item.name}</Option>;
+                  })}
+                </Select>
                 <Button
                   onClick={() => {
                     if (imgRegionTool) {
@@ -161,8 +185,10 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
 };
 
 const mapStateToProps = ({ imgRegionTool }: { imgRegionTool: StateType }) => {
+  // console.log(imgRegionTool)
   return {
     imgRegionTool: imgRegionTool.imgRegionTool,
+    tags: imgRegionTool.tags,
   };
 };
 

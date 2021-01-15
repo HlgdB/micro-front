@@ -7,7 +7,9 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  publicPath: '/public/',
+  publicPath: './',
+  history: { type: 'hash' },
+  hash: true,
   dynamicImport: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   // routes: [
