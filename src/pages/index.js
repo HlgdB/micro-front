@@ -42,7 +42,7 @@ const MainList = (props) => {
           <Spin spinning={loading}>
             <List
               grid={{ gutter: 16, column: 3 }}
-              dataSource={mainlist.allVideo}
+              dataSource={mainlist.selfList}
               renderItem={(item) => (
                 <List.Item>
                   <Card

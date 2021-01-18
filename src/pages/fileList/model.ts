@@ -27,7 +27,7 @@ const IndexModel: IndexModelType = {
   effects: {
     *getAllVideo(action, { put, call }) {
       const data = yield call(getAllVideo);
-      console.log(data);
+      // console.log(data);
       yield put({
         type: 'save',
         payload: { videos: data },
@@ -35,7 +35,7 @@ const IndexModel: IndexModelType = {
     },
     *getSelfVideo(action, { put, call }) {
       const data = yield call(getSelfVideo);
-      console.log(data);
+      // console.log(data);
       yield put({
         type: 'save',
         payload: { videos: data },
@@ -43,7 +43,7 @@ const IndexModel: IndexModelType = {
     },
     *getOthersVideo(action, { put, call }) {
       const data = yield call(getOthersVideo);
-      console.log(data);
+      // console.log(data);
       yield put({
         type: 'save',
         payload: { videos: data },
@@ -51,7 +51,7 @@ const IndexModel: IndexModelType = {
     },
     *getAllPic(action, { put, call }) {
       const data = yield call(getAllPic);
-      console.log(data);
+      // console.log(data);
       yield put({
         type: 'save',
         payload: { pics: data },

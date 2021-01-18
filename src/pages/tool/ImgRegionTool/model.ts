@@ -12,6 +12,7 @@ import { ImgRegionToolDataType } from './data';
 export interface StateType {
   imgRegionTool: ImgRegionToolDataType;
   tags: any;
+  pics: string[];
 }
 
 // 初始信息
@@ -29,6 +30,7 @@ export interface ModelType {
   // eslint-disable-next-line @typescript-eslint/ban-types
   effects: {
     getPrivateTag: Effect;
+    setPics: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -43,6 +45,7 @@ const Model: ModelType = {
   state: {
     imgRegionTool: init_data,
     tags: undefined,
+    pics: [],
   },
 
   effects: {
@@ -52,6 +55,15 @@ const Model: ModelType = {
       yield put({
         type: 'save',
         payload: { tags: data },
+      });
+    },
+    *setPics({ payload }, { put, call }) {
+      // console.log(payload);
+      const arr = [];
+      arr.push(payload);
+      yield put({
+        type: 'save',
+        payload: { pics: arr },
       });
     },
   },

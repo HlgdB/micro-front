@@ -13,8 +13,12 @@ const { Search } = Input;
 const { TabPane } = Tabs;
 
 const PageTag = (props) => {
-  const { videos, pics, dispatch } = props;
-  console.log(pics);
+  const { videos, pics, dispatch, history } = props;
+
+  // useEffect(()=>{
+
+  // }, [])
+  // console.log(pics);
 
   const menu = (
     <Menu>
@@ -219,8 +223,24 @@ const PageTag = (props) => {
         key: 'action',
         render: (text, record) => (
           <Space size="middle">
+            <a
+              onClick={() => {
+                // console.log(record);
+                request(`/file/file_url/${record.name}`, {
+                  method: 'GET',
+                }).then((res) => {
+                  // console.log("pic url: ", res)
+                  dispatch({
+                    type: 'global/setPics',
+                    payload: res.url,
+                  });
+                  history.push('/imgRegionTool');
+                });
+              }}
+            >
+              标志
+            </a>
             <a>检测</a>
-            <a>标志</a>
             <a>删除</a>
           </Space>
         ),

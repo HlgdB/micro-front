@@ -18,16 +18,18 @@ const imgList = [knightImg, RomaImg, thrImg];
 interface ImgRegionToolProps {
   dispatch: Dispatch;
   imgRegionTool?: ImgRegionToolDataType;
+  tags?: any;
+  picsUrl?: any;
 }
 
 const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
-  const { imgRegionTool, dispatch, tags } = props;
+  const { imgRegionTool, dispatch, tags, picsUrl } = props;
 
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
-    console.log(tags);
-  }, [tags]);
+    console.log(tags, picsUrl);
+  }, [tags, picsUrl]);
 
   const childRef: any = React.useRef();
 
@@ -37,7 +39,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
     >
       <Button
         onClick={() => {
-          setImgIndex((imgIndex + 1) % 3);
+          setImgIndex((imgIndex + 1) % picsUrl.length);
         }}
       >
         切换图片
@@ -113,7 +115,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
         <div id="right-panel" style={{ width: 640, marginLeft: 0 }}>
           <Canvas
             ref={childRef}
-            imgUrl={imgList[imgIndex]}
+            imgUrl={picsUrl[imgIndex]}
             stageAttribute={{ width: 640, height: 480 }}
           />
         </div>
@@ -184,11 +186,12 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ imgRegionTool }: { imgRegionTool: StateType }) => {
+const mapStateToProps = ({ imgRegionTool, global }: { imgRegionTool: StateType; global: any }) => {
   // console.log(imgRegionTool)
   return {
     imgRegionTool: imgRegionTool.imgRegionTool,
     tags: imgRegionTool.tags,
+    picsUrl: global.pics,
   };
 };
 
