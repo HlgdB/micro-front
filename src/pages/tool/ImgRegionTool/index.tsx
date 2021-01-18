@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, List, Input, InputNumber, Space, Select } from 'antd';
+import { Button, List, Input, InputNumber, Space, Select, Breadcrumb } from 'antd';
 
 import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
@@ -34,9 +34,11 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
   const childRef: any = React.useRef();
 
   return (
-    <div
-      style={{ marginTop: 20, marginLeft: 20, width: 680, backgroundColor: 'white', padding: 20 }}
-    >
+    <div style={{ width: '100%', padding: 20 }}>
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        <Breadcrumb.Item>活体检测</Breadcrumb.Item>
+        <Breadcrumb.Item>图片标注</Breadcrumb.Item>
+      </Breadcrumb>
       <Button
         onClick={() => {
           setImgIndex((imgIndex + 1) % picsUrl.length);
@@ -46,7 +48,13 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
       </Button>
       <div
         id="header-nav"
-        style={{ padding: 12, width: 640, border: '1px solid #d9d9d9', marginBottom: 10 }}
+        style={{
+          padding: 12,
+          width: 640,
+          border: '1px solid #d9d9d9',
+          marginBottom: 10,
+          backgroundColor: 'white',
+        }}
       >
         <Space>
           <Button
@@ -111,8 +119,11 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
           />
         </Space>
       </div>
-      <div id="main_window" style={{ display: 'block' }}>
-        <div id="right-panel" style={{ width: 640, marginLeft: 0 }}>
+      <div id="main_window" style={{ display: 'block', height: 520, backgroundColor: 'white' }}>
+        <div
+          id="right-panel"
+          style={{ width: 640, marginRight: 20, marginLeft: 10, marginTop: 20, float: 'left' }}
+        >
           <Canvas
             ref={childRef}
             imgUrl={picsUrl[imgIndex]}
@@ -120,11 +131,22 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
           />
         </div>
 
-        <div id="Left-panel" style={{ width: 640, marginTop: 8 }}>
+        <div
+          id="Left-panel"
+          style={{
+            width: '45%',
+            float: 'left',
+            height: 480,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            marginTop: 20,
+          }}
+        >
           <List
             header={<div>选区</div>}
             bordered
             dataSource={imgRegionTool?.regions}
+            // style={{height: 480}}
             renderItem={(region: any, index: number) => (
               <List.Item>
                 <span style={{ width: 40 }}>{region.id}</span>

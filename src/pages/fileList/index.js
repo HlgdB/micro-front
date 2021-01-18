@@ -127,8 +127,8 @@ const PageTag = (props) => {
         key: 'action',
         render: (text, record) => (
           <Space size="middle">
+            <a>标注</a>
             <a>检测</a>
-            <a>标志</a>
             <a>删除</a>
           </Space>
         ),
@@ -151,10 +151,10 @@ const PageTag = (props) => {
         style={{ padding: 24, minHeight: 360, float: 'left', width: '100%' }}
       >
         <div style={{ float: 'left' }}>
-          <DatePicker />
+          <DatePicker placeholder="选择日期" />
         </div>
         <div style={{ marginLeft: '76%' }}>
-          <Search placeholder="input search text" allowClear enterButton="Search" />
+          <Search placeholder="输入关键字" allowClear enterButton="搜索" />
         </div>
         <div style={{ float: 'left' }}>
           <Button style={{ marginTop: 10 }}>一键检测</Button>
@@ -238,7 +238,7 @@ const PageTag = (props) => {
                 });
               }}
             >
-              标志
+              标注
             </a>
             <a>检测</a>
             <a>删除</a>
@@ -279,15 +279,10 @@ const PageTag = (props) => {
         style={{ padding: 24, minHeight: 360, float: 'left', width: '100%' }}
       >
         <div style={{ float: 'left' }}>
-          <DatePicker />
+          <DatePicker placeholder="选择日期" />
         </div>
         <div style={{ marginLeft: '76%' }}>
-          <Search
-            placeholder="input search text"
-            allowClear
-            enterButton="Search"
-            onSearch={onSearch}
-          />
+          <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
         <div style={{ float: 'left' }}>
           <Button style={{ marginTop: 10 }}>一键检测</Button>
