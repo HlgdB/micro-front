@@ -1,6 +1,6 @@
 import 'antd/dist/antd.css';
-import { Link } from 'umi';
-import React, { useState, useEffect } from 'react';
+import { Link, connect } from 'umi';
+import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import style from './style.less';
 import titlepic from '@/assets/cat.jpg';
@@ -10,16 +10,11 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const BasicLayouts = (props) => {
-  const { location } = props;
+  const { location, userInfo } = props;
   const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    console.log('location', location);
-    return () => {};
-  }, [location]);
-
   const onCollapse = (collapsed_) => {
-    console.log(collapsed_);
+    // console.log(collapsed_);
     setCollapsed(collapsed_);
   };
 
@@ -29,7 +24,7 @@ const BasicLayouts = (props) => {
         <div className={style.logo} />
         <Menu
           theme="dark"
-          defaultSelectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname]}
           mode="inline"
           defaultOpenKeys={['sub1', 'sub2', 'sub3']}
         >
@@ -71,14 +66,21 @@ const BasicLayouts = (props) => {
             <Link to="/user/login">
               <img className={style.titlepic} src={titlepic} alt="" />
             </Link>
-            用户名
+            {userInfo?.nickname}
           </div>
         </Header>
         <Content style={{ margin: '0 16px' }}>{props.children}</Content>
-        <Footer style={{ textAlign: 'center' }}>Micro-front web HUST-wanlin by hlgdb</Footer>
+        <Footer style={{ textAlign: 'center' }}>Micro-front web HUST-wanlin by hlgdb.</Footer>
       </Layout>
     </Layout>
   );
 };
 
-export default BasicLayouts;
+const mapStateToProps = ({ global }) => {
+  // console.log(mainlist);
+  return {
+    userInfo: global.userInfo,
+  };
+};
+
+export default connect(mapStateToProps)(BasicLayouts);

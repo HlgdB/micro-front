@@ -22,17 +22,17 @@ const MainList = (props) => {
           <Row gutter={16}>
             <img className="Userpic" src={titlepic} alt="" />
             <div className="Usertext">
-              <p className="projectName">用户名：喵喵喵</p>
-              <p className="projectName">邮箱：yingying@yy.com</p>
+              <p className="projectName">{`用户名：${mainlist.userInfo?.nickname}`}</p>
+              <p className="projectName">{`邮箱：${mainlist.userInfo?.email}`}</p>
             </div>
             <Col className="data" span={2}>
-              <Statistic title="文件数" value={mainlist.allVideo?.length} />
+              <Statistic title="文件数" value={mainlist.allList?.length} />
             </Col>
             <Col className="data" span={2}>
               <Statistic title="已检测" value={1} />
             </Col>
             <Col className="data" span={2}>
-              <Statistic title="自己上传" value={mainlist.selfList?.length} />
+              <Statistic title="自己上传" value={0} />
             </Col>
           </Row>
         </div>
@@ -42,7 +42,7 @@ const MainList = (props) => {
           <Spin spinning={loading}>
             <List
               grid={{ gutter: 16, column: 3 }}
-              dataSource={mainlist.selfList}
+              dataSource={mainlist.allList}
               renderItem={(item) => (
                 <List.Item>
                   <Card
@@ -74,7 +74,7 @@ const MainList = (props) => {
 };
 
 const mapStateToProps = ({ mainlist, loading }) => {
-  console.log(mainlist);
+  // console.log(mainlist);
   return {
     mainlist,
     loading: loading.effects['mainlist/getRemoveList'],

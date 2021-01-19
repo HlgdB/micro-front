@@ -1,23 +1,15 @@
 import { Effect, Reducer, Subscription } from 'umi';
-import {
-  getPrivateTag,
-  searchPrivateTag,
-  getPublicTag,
-  modifyTag,
-  addTag,
-  searchPublicTag,
-} from './service';
+import { getTag, searchTag, modifyTag, addTag } from './service';
+import { message } from 'antd';
 
 export interface IndexModelType {
   namespace: 'tagList';
   state: any;
   effects: {
-    getPrivateTag: Effect;
-    searchPrivateTag: Effect;
-    getPublicTag: Effect;
+    getTag: Effect;
+    searchTag: Effect;
     modifyTag: Effect;
     addTag: Effect;
-    searchPublicTag: Effect;
   };
   reducers: {
     save: Reducer;
@@ -27,36 +19,21 @@ export interface IndexModelType {
 const IndexModel: IndexModelType = {
   namespace: 'tagList',
   state: {
-    privateTag: undefined,
-    publicTag: undefined,
+    tags: undefined,
   },
   effects: {
-    *getPrivateTag(action, { put, call }) {
-      const data = yield call(getPrivateTag);
+    *getTag(action, { put, call }) {
+      const data = yield call(getTag);
       yield put({
         type: 'save',
-        payload: { privateTag: data },
+        payload: { tags: data },
       });
     },
-    *searchPrivateTag({ payload }, { put, call }) {
-      const data = yield call(searchPrivateTag, payload);
+    *searchTag({ payload }, { put, call }) {
+      const data = yield call(searchTag, payload);
       yield put({
         type: 'save',
-        payload: { privateTag: data },
-      });
-    },
-    *searchPublicTag({ payload }, { put, call }) {
-      const data = yield call(searchPublicTag, payload);
-      yield put({
-        type: 'save',
-        payload: { publicTag: data },
-      });
-    },
-    *getPublicTag(action, { put, call }) {
-      const data = yield call(getPublicTag);
-      yield put({
-        type: 'save',
-        payload: { publicTag: data },
+        payload: { tags: data },
       });
     },
     *modifyTag({ payload }, { put, call }) {
@@ -64,11 +41,11 @@ const IndexModel: IndexModelType = {
       if (data) {
         console.log(data);
         yield put({
-          type: 'getPrivateTag',
+          type: 'getTag',
         });
-        yield put({
-          type: 'getPublicTag',
-        });
+        message.success('修改成功！');
+      } else {
+        message.success('修改失败！');
       }
     },
     *addTag({ payload }, { put, call }) {
@@ -76,11 +53,11 @@ const IndexModel: IndexModelType = {
       if (data) {
         console.log(data);
         yield put({
-          type: 'getPrivateTag',
+          type: 'getTag',
         });
-        yield put({
-          type: 'getPublicTag',
-        });
+        message.success('新增标签成功！');
+      } else {
+        message.error('新增标签失败！');
       }
     },
   },
@@ -94,10 +71,7 @@ const IndexModel: IndexModelType = {
       return history.listen(({ pathname }) => {
         if (pathname === '/tagList') {
           dispatch({
-            type: 'getPrivateTag',
-          });
-          dispatch({
-            type: 'getPublicTag',
+            type: 'getTag',
           });
         }
       });

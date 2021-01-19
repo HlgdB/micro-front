@@ -1,35 +1,44 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, List, Input, InputNumber, Space, Select, Breadcrumb } from 'antd';
+import { Button, List, InputNumber, Space, Select, Breadcrumb } from 'antd';
 
 import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
 import { ImgRegionToolDataType } from './data';
 
-import knightImg from '@/assets/knight.jpg';
-import RomaImg from '@/assets/Eastern_roman_empire_flag.png';
-import thrImg from '@/assets/13.jpg';
+// import knightImg from '@/assets/knight.jpg';
+// import RomaImg from '@/assets/Eastern_roman_empire_flag.png';
+// import thrImg from '@/assets/13.jpg';
 
 import Canvas from './Canvas';
 
 const { Option } = Select;
-const imgList = [knightImg, RomaImg, thrImg];
+// const imgList = [knightImg, RomaImg, thrImg];
 
 interface ImgRegionToolProps {
   dispatch: Dispatch;
   imgRegionTool?: ImgRegionToolDataType;
   tags?: any;
-  picsUrl?: any;
+  picsInfo?: any;
 }
 
 const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
-  const { imgRegionTool, dispatch, tags, picsUrl } = props;
+  const { imgRegionTool, dispatch, tags, picsInfo } = props;
 
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
-    console.log(tags, picsUrl);
-  }, [tags, picsUrl]);
+    // console.log("picsInfo：", picsInfo);
+    if (picsInfo && picsInfo.length > 0) {
+      // console.log("photo_labels：", JSON.parse(picsInfo[imgIndex].photo_labels));
+      dispatch({
+        type: 'imgRegionTool/setImgRegionTool',
+        payload: {
+          regions: JSON.parse(picsInfo[imgIndex].photo_labels),
+        },
+      });
+    }
+  }, [picsInfo, imgIndex, dispatch]);
 
   const childRef: any = React.useRef();
 
@@ -39,18 +48,11 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
         <Breadcrumb.Item>活体检测</Breadcrumb.Item>
         <Breadcrumb.Item>图片标注</Breadcrumb.Item>
       </Breadcrumb>
-      <Button
-        onClick={() => {
-          setImgIndex((imgIndex + 1) % picsUrl.length);
-        }}
-      >
-        切换图片
-      </Button>
       <div
         id="header-nav"
         style={{
           padding: 12,
-          width: 640,
+          width: 800,
           border: '1px solid #d9d9d9',
           marginBottom: 10,
           backgroundColor: 'white',
@@ -91,7 +93,29 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
           >
             选区
           </Button>
-          选区粗细
+          <Button
+            onClick={() => {
+              setImgIndex((imgIndex + 1) % picsInfo.length);
+            }}
+            disabled={!(picsInfo > 1)}
+          >
+            切换图片
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              dispatch({
+                type: 'imgRegionTool/setPicMark',
+                payload: {
+                  photo_id: picsInfo[imgIndex]?.id,
+                  photo_labels: JSON.stringify(imgRegionTool?.regions),
+                },
+              });
+            }}
+          >
+            保存
+          </Button>
+          选区粗细:
           <InputNumber
             value={imgRegionTool?.regionsStrokeWidth}
             onChange={(e) => {
@@ -104,7 +128,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
               }
             }}
           />
-          选区字体大小
+          选区字体大小:
           <InputNumber
             value={imgRegionTool?.regionsFontSize}
             onChange={(e) => {
@@ -126,7 +150,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
         >
           <Canvas
             ref={childRef}
-            imgUrl={picsUrl[imgIndex]}
+            imgUrl={picsInfo[imgIndex]?.photo_url}
             stageAttribute={{ width: 640, height: 480 }}
           />
         </div>
@@ -150,25 +174,12 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
             renderItem={(region: any, index: number) => (
               <List.Item>
                 <span style={{ width: 40 }}>{region.id}</span>
-                {/* <Input
-                  value={region.name}
-                  onChange={(e) => {
-                    console.log('e', e);
-                    if (imgRegionTool) {
-                      region.name = e.target.value;
-                      imgRegionTool.regions[index] = region;
-                      dispatch({
-                        type: 'imgRegionTool/setImgRegionTool',
-                        payload: { regions: imgRegionTool.regions },
-                      });
-                    }
-                  }}
-                /> */}
                 <Select
                   style={{ width: 350 }}
                   placeholder="选择微生物"
+                  value={region.name}
                   onChange={(e) => {
-                    console.log(e);
+                    // console.log(e);
                     if (imgRegionTool) {
                       region.name = e;
                       imgRegionTool.regions[index] = region;
@@ -213,7 +224,7 @@ const mapStateToProps = ({ imgRegionTool, global }: { imgRegionTool: StateType; 
   return {
     imgRegionTool: imgRegionTool.imgRegionTool,
     tags: imgRegionTool.tags,
-    picsUrl: global.pics,
+    picsInfo: global.pics,
   };
 };
 

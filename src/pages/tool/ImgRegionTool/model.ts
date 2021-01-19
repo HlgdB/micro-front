@@ -4,15 +4,17 @@
  * @Date: 2021-01-11 14:30:12
  */
 
-import { EffectCoverflow } from 'swiper';
+// import { EffectCoverflow } from 'swiper';
+import { setPicMark } from './service';
 import { Effect, Reducer, Subscription } from 'umi';
-import { getPrivateTag, getPublicTag } from '../../tagList/service';
+import { getTag } from '../../tagList/service';
 import { ImgRegionToolDataType } from './data';
+import { message } from 'antd';
 
 export interface StateType {
   imgRegionTool: ImgRegionToolDataType;
   tags: any;
-  pics: string[];
+  pics: any;
 }
 
 // 初始信息
@@ -20,8 +22,8 @@ const init_data = {
   regions: [],
   maxId: 0,
   toolState: 'default',
-  regionsStrokeWidth: 8,
-  regionsFontSize: 42,
+  regionsStrokeWidth: 3, // 选区线宽
+  regionsFontSize: 21, // 选区字体大小
 };
 
 export interface ModelType {
@@ -29,8 +31,9 @@ export interface ModelType {
   state: StateType;
   // eslint-disable-next-line @typescript-eslint/ban-types
   effects: {
-    getPrivateTag: Effect;
+    getTag: Effect;
     setPics: Effect;
+    setPicMark: Effect;
   };
   reducers: {
     save: Reducer<StateType>;
@@ -49,15 +52,15 @@ const Model: ModelType = {
   },
 
   effects: {
-    *getPrivateTag(action, { put, call }) {
-      const data = yield call(getPrivateTag);
+    *getTag(action, { put, call }) {
+      const data = yield call(getTag);
       // console.log(data);
       yield put({
         type: 'save',
         payload: { tags: data },
       });
     },
-    *setPics({ payload }, { put, call }) {
+    *setPics({ payload }, { put }) {
       // console.log(payload);
       const arr = [];
       arr.push(payload);
@@ -65,6 +68,14 @@ const Model: ModelType = {
         type: 'save',
         payload: { pics: arr },
       });
+    },
+    *setPicMark({ payload }, { call }) {
+      const data = yield call(setPicMark, payload);
+      if (data) {
+        message.success('保存图片标注成功！');
+      } else {
+        message.error('保存图片标注失败！');
+      }
     },
   },
 
@@ -85,7 +96,7 @@ const Model: ModelType = {
       return history.listen(({ pathname }) => {
         if (pathname === '/imgRegionTool') {
           dispatch({
-            type: 'getPrivateTag',
+            type: 'getTag',
           });
         }
       });

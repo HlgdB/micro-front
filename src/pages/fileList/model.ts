@@ -67,9 +67,9 @@ const IndexModel: IndexModelType = {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
         if (pathname === '/fileList') {
-          dispatch({
-            type: 'getAllVideo',
-          });
+          // dispatch({
+          //   type: 'getAllVideo',
+          // });
           dispatch({
             type: 'getAllPic',
           });

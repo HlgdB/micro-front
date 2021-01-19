@@ -6,14 +6,14 @@ import './Tag.css';
 import { Input } from 'antd';
 import { Dropdown } from 'antd';
 import request from '@/utils/request';
-import { DownOutlined, AudioOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import { DatePicker, Space } from 'antd';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
 
 const PageTag = (props) => {
-  const { videos, pics, dispatch, history } = props;
+  const { videos, pics, picLoading, dispatch, history } = props;
 
   // useEffect(()=>{
 
@@ -226,13 +226,13 @@ const PageTag = (props) => {
             <a
               onClick={() => {
                 // console.log(record);
-                request(`/file/file_url/${record.name}`, {
+                request(`/picture/${record.id}`, {
                   method: 'GET',
                 }).then((res) => {
-                  // console.log("pic url: ", res)
+                  // console.log("pic info: ", res)
                   dispatch({
                     type: 'global/setPics',
-                    payload: res.url,
+                    payload: res,
                   });
                   history.push('/imgRegionTool');
                 });
@@ -279,16 +279,18 @@ const PageTag = (props) => {
         style={{ padding: 24, minHeight: 360, float: 'left', width: '100%' }}
       >
         <div style={{ float: 'left' }}>
-          <DatePicker placeholder="选择日期" />
+          <DatePicker placeholder="选择日期" disabled />
         </div>
         <div style={{ marginLeft: '76%' }}>
           <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
         <div style={{ float: 'left' }}>
-          <Button style={{ marginTop: 10 }}>一键检测</Button>
+          <Button style={{ marginTop: 10 }} disabled>
+            一键检测
+          </Button>
         </div>
         <div style={{ marginTop: 10, marginLeft: '94%' }}>
-          <Dropdown overlay={menu}>
+          <Dropdown overlay={menu} disabled>
             <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
               筛选目标 <DownOutlined />
             </a>
@@ -299,8 +301,8 @@ const PageTag = (props) => {
           dataSource={picdata}
           style={{ marginTop: 20 }}
           pagination={paginationProps}
-          rowSelection={rowSelection}
-          loading={false}
+          rowSelection={{}}
+          loading={picLoading}
           onRow={(record) => ({})}
         />
       </div>
@@ -316,8 +318,8 @@ const PageTag = (props) => {
       <TabPane tab="图像" key="1">
         <PicPage />
       </TabPane>
-      <TabPane tab="视频" key="2">
-        <VideoPage />s
+      <TabPane tab="视频" key="2" disabled>
+        <VideoPage />
       </TabPane>
     </Tabs>
   );
@@ -334,11 +336,11 @@ const PageTag = (props) => {
 };
 
 const mapStateToProps = ({ fileList, loading }) => {
-  console.log('fileList', fileList);
+  // console.log('fileList', fileList);
   return {
     videos: fileList.videos,
     pics: fileList.pics,
-    // powerEngine: inforImport.powerEngine
+    picLoading: loading.effects['fileList/getAllPic'],
   };
 };
 

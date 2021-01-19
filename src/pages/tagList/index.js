@@ -1,20 +1,14 @@
 import 'antd/dist/antd.css';
 import { connect } from 'umi';
-import React, { useState, useEffect } from 'react';
-import { Breadcrumb, Row, Col, Modal } from 'antd';
+import React, { useState } from 'react';
+import { Breadcrumb, Modal } from 'antd';
 import './PageprTagList.css';
-import { Tabs, Button } from 'antd';
-import { Table, Input, Form } from 'antd';
+import { Table, Input, Form, Button } from 'antd';
 
 const { Search } = Input;
-const { TabPane } = Tabs;
-
-function callback(key) {
-  console.log(key);
-}
 
 const Index = (props) => {
-  const { privateTag, publicTag, dispatch } = props;
+  const { tags, loading, dispatch } = props;
 
   const AddModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -84,7 +78,7 @@ const Index = (props) => {
           form={form}
           onFinish={onFinish}
           initialValues={{ description: record.record.description }}
-          style={{ width: '80%', float: 'left' }}
+          style={{ width: '85%', float: 'left' }}
         >
           <Form.Item name="description" style={{ margin: '0 0' }}>
             <Input style={{ width: '100%', marginRight: 10 }}></Input>
@@ -126,9 +120,9 @@ const Index = (props) => {
       },
     },
     {
-      title: '创建者id',
-      dataIndex: 'creator_id',
-      key: 'creator_id',
+      title: '创建者',
+      dataIndex: 'creator_name',
+      key: 'creator_name',
     },
   ];
 
@@ -138,16 +132,16 @@ const Index = (props) => {
         <AddModal />
         <Search
           className="Search"
-          placeholder="input search text"
+          placeholder="输入关键字"
           onSearch={(value) => {
             if (value) {
               dispatch({
-                type: 'tagList/searchPrivateTag',
+                type: 'tagList/searchTag',
                 payload: value,
               });
             } else {
               dispatch({
-                type: 'tagList/getPrivateTag',
+                type: 'tagList/getTag',
               });
             }
           }}
@@ -161,46 +155,10 @@ const Index = (props) => {
 
         <Table
           columns={columns}
-          dataSource={privateTag}
+          dataSource={tags}
           rowSelection={{}}
           pagination={{ defaultPageSize: 5 }}
-        />
-      </div>
-    );
-  };
-
-  const PublicTagList = () => {
-    return (
-      <div className="site-layout-content" style={{ padding: 24, minHeight: 360 }}>
-        <AddModal />
-        <Search
-          className="Search"
-          placeholder="input search text"
-          onSearch={(value) => {
-            if (value) {
-              dispatch({
-                type: 'tagList/searchPublicTag',
-                payload: value,
-              });
-            } else {
-              dispatch({
-                type: 'tagList/getPublicTagList',
-              });
-            }
-          }}
-          enterButton
-          style={{ width: 300, float: 'right' }}
-        />
-
-        <br />
-        <br />
-        <br />
-
-        <Table
-          columns={columns}
-          dataSource={publicTag}
-          rowSelection={{}}
-          pagination={{ defaultPageSize: 5 }}
+          loading={loading}
         />
       </div>
     );
@@ -212,14 +170,7 @@ const Index = (props) => {
         <Breadcrumb.Item>标签管理</Breadcrumb.Item>
         <Breadcrumb.Item>标签列表</Breadcrumb.Item>
       </Breadcrumb>
-      <Tabs defaultActiveKey="1" onChange={callback}>
-        <TabPane tab="私有标签" key="1">
-          <PrivateTagList />
-        </TabPane>
-        <TabPane tab="公共标签" key="2">
-          <PublicTagList />
-        </TabPane>
-      </Tabs>
+      <PrivateTagList />
     </div>
   );
 };
@@ -227,9 +178,8 @@ const Index = (props) => {
 const mapStateToProps = ({ tagList, loading }) => {
   console.log('tagList', tagList);
   return {
-    privateTag: tagList.privateTag,
-    publicTag: tagList.publicTag,
-    // powerEngine: inforImport.powerEngine
+    tags: tagList.tags,
+    loading: loading.effects['tagList/getTag'],
   };
 };
 

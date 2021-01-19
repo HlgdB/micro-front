@@ -1,32 +1,20 @@
 import request from '@/utils/request';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
-export const getPrivateTag = async () => {
-  return request(`/label/private`, {
+export const getTag = async () => {
+  return request(`/label`, {
     method: 'get',
   });
 };
 
-export const searchPrivateTag = async (body: any) => {
-  return request(`/label/private/${body}`, {
-    method: 'get',
-  });
-};
-
-export const getPublicTag = async () => {
-  return request(`/label/common`, {
-    method: 'get',
-  });
-};
-
-export const searchPublicTag = async (body: any) => {
-  return request(`/label/common/${body}`, {
+export const searchTag = async (body: any) => {
+  return request(`/label/${body}`, {
     method: 'get',
   });
 };
 
 export const modifyTag = async (body: any) => {
-  return request(`/label/private`, {
+  return request(`/label`, {
     method: 'PUT',
     data: body,
   });
@@ -34,7 +22,7 @@ export const modifyTag = async (body: any) => {
 
 export const addTag = async (body: any) => {
   console.log(body);
-  return request(`/label/private`, {
+  return request(`/label`, {
     method: 'POST',
     data: body,
   });

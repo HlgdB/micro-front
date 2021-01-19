@@ -1,14 +1,14 @@
 import { Effect, Reducer, Subscription } from 'umi';
-import { getRemoveList, getSelfList } from './service';
+import { getRemoveList, getSelfList, getUserInfo } from './service';
 
 export interface IndexModelType {
   namespace: 'mainlist';
   state: any;
   effects: {
-    query: Effect;
+    // query: Effect;
     getRemoveList: Effect;
     getSelfList: Effect;
-    // getDefaultList: Effect;
+    getUserInfo: Effect;
   };
   reducers: {
     save: Reducer;
@@ -20,35 +20,33 @@ export interface IndexModelType {
 const IndexModel: IndexModelType = {
   namespace: 'mainlist',
   state: {
-    allVideo: undefined,
+    allList: undefined,
     selfList: undefined,
+    userInfo: undefined,
   },
   effects: {
-    *query({ payload }, { call, put }) {},
+    // *query({ payload }, { call, put }) {},
     *getRemoveList(action, { put, call }) {
       const data = yield call(getRemoveList);
-      console.log(data);
       yield put({
         type: 'save',
-        payload: { allVideo: data },
+        payload: { allList: data },
       });
     },
     *getSelfList(action, { put, call }) {
       const data = yield call(getSelfList);
-      console.log(data);
       yield put({
         type: 'save',
         payload: { selfList: data },
       });
     },
-    // *getDefaultList(action,{put,call}) {
-    //     const data = yield call(getDefaultList);
-    //     // console.log(data)
-    //     yield put({
-    //         type:'save',
-    //         payload:data
-    //     })
-    // }
+    *getUserInfo(action, { put, call }) {
+      const data = yield call(getUserInfo);
+      yield put({
+        type: 'save',
+        payload: { userInfo: data },
+      });
+    },
   },
   reducers: {
     save(state, { payload }) {
@@ -67,14 +65,9 @@ const IndexModel: IndexModelType = {
             type: 'getRemoveList',
           });
           dispatch({
-            type: 'getSelfList',
+            type: 'getUserInfo',
           });
         }
-        // else if(pathname === '/main/MainPage_Tag'){
-        //     dispatch({
-        //         type: 'getDefaultList',
-        //     })
-        // }
       });
     },
   },
