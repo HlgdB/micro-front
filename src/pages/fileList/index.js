@@ -173,14 +173,14 @@ const PageTag = (props) => {
           pagination={paginationProps}
           rowSelection={rowSelection}
           loading={false}
-          onRow={(record) => ({})}
+          // onRow={(record) => ({})}
         />
       </div>
     );
   };
 
   const PicPage = () => {
-    const [selectedRowKeys, setselectedRowKeys] = useState([]);
+    // const [selectedRowKeys, setselectedRowKeys] = useState([]);
     const [picdata, setpicdata] = useState(undefined);
 
     useEffect(() => {
@@ -263,15 +263,15 @@ const PageTag = (props) => {
       }
     };
 
-    const onSelectedRowKeysChange = (selectedRowKeys_) => {
-      setselectedRowKeys({ selectedRowKeys_ });
-      console.log(selectedRowKeys_);
-    };
+    // const onSelectedRowKeysChange = (selectedRowKeys_) => {
+    //   setselectedRowKeys({ selectedRowKeys_ });
+    //   console.log(selectedRowKeys_);
+    // };
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: onSelectedRowKeysChange,
-    };
+    // const rowSelection = {
+    //   selectedRowKeys,
+    //   onChange: onSelectedRowKeysChange,
+    // };
 
     return (
       <div
@@ -303,7 +303,7 @@ const PageTag = (props) => {
           pagination={paginationProps}
           rowSelection={{}}
           loading={picLoading}
-          onRow={(record) => ({})}
+          // onRow={(record) => ({})}
         />
       </div>
     );

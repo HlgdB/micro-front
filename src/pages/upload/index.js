@@ -1,12 +1,9 @@
 import 'antd/dist/antd.css';
-import { Link } from 'umi';
-import React, { useState } from 'react';
-import { Layout, Menu, Breadcrumb, Statistic, Row, Col, Table } from 'antd';
+import React from 'react';
+import { Breadcrumb } from 'antd';
 import './Upload.css';
-import { Upload, message, Button } from 'antd';
+import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import { Switch, Radio, Form, Space, Tag } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
 const { Dragger } = Upload;
