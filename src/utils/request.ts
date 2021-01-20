@@ -71,7 +71,7 @@ const request = extend({
 });
 
 const { NODE_ENV } = process.env;
-console.log(NODE_ENV);
+// console.log(NODE_ENV);
 const ENV = 'pre';
 
 export const post_prefix = config[ENV];

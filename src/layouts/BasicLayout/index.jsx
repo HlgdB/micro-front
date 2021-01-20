@@ -45,6 +45,10 @@ const BasicLayouts = (props) => {
               <Link to="/imgRegionTool">图片标注</Link>
             </Menu.Item>
 
+            <Menu.Item key="/videoTool">
+              <Link to="/videoTool">视频工具</Link>
+            </Menu.Item>
+
             <Menu.Item key="/showResult" disabled>
               <Link to="/showResult">×检测结果</Link>
             </Menu.Item>
