@@ -4,6 +4,7 @@
  */
 
 import { extend } from 'umi-request';
+import { history } from 'umi';
 import { notification, message } from 'antd';
 import Cookies from 'js-cookie';
 import { removeNull } from './util';
@@ -127,6 +128,9 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
         }
       } else if (res) {
         console.log('res', res);
+        if (res?.msg === 'token is invalid' && res.code === 10031) {
+          document.cookie = '';
+        }
         if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });
         } else {

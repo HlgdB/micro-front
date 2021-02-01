@@ -173,7 +173,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
             // style={{height: 480}}
             renderItem={(region: any, index: number) => (
               <List.Item>
-                <span style={{ width: 40 }}>{region.id}</span>
+                <span style={{ width: 40 }}>{index + 1}</span>
                 <Select
                   style={{ width: 350 }}
                   placeholder="选择微生物"

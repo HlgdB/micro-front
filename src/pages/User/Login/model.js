@@ -18,14 +18,15 @@ const Model = {
 
   effects: {
     *login({ payload }, { call }) {
-      console.log('logindata', payload);
+      // console.log('logindata', payload);
       const data = yield call(Login, payload);
 
       if (data) {
-        console.log('token', data);
-        const { token, userInfo } = data;
+        // console.log('token', data);
+        const { token } = data;
         // token 过期时间24小时
         const expires = new Date(+new Date() + 24 * 60 * 60 * 1000);
+        // const expires = new Date(+new Date() + 10 * 1000);
 
         CookieUtil.set('token', token, expires, '/');
         // CookieUtil.set('userInfo', JSON.stringify(userInfo), new Date(+new Date() + 24 * 60 * 60 * 1000))
