@@ -6,14 +6,9 @@ import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
 import { ImgRegionToolDataType } from './data';
 
-// import knightImg from '@/assets/knight.jpg';
-// import RomaImg from '@/assets/Eastern_roman_empire_flag.png';
-// import thrImg from '@/assets/13.jpg';
-
 import Canvas from './Canvas';
 
 const { Option } = Select;
-// const imgList = [knightImg, RomaImg, thrImg];
 
 interface ImgRegionToolProps {
   dispatch: Dispatch;
@@ -35,6 +30,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
         type: 'imgRegionTool/setImgRegionTool',
         payload: {
           regions: JSON.parse(picsInfo[imgIndex].photo_labels),
+          maxId: JSON.parse(picsInfo[imgIndex].photo_labels).length,
         },
       });
     }
@@ -200,7 +196,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
                       imgRegionTool.regions.splice(index, 1);
                       dispatch({
                         type: 'imgRegionTool/setImgRegionTool',
-                        payload: { regions: imgRegionTool.regions },
+                        payload: { regions: imgRegionTool.regions, maxId: imgRegionTool.maxId - 1 },
                       });
                     }
                   }}

@@ -9,8 +9,16 @@ import { TagOutlined, BulbOutlined, FolderOutlined } from '@ant-design/icons';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
+const init_data = {
+  regions: [],
+  maxId: 0,
+  toolState: 'default',
+  regionsStrokeWidth: 3, // 选区线宽
+  regionsFontSize: 21, // 选区字体大小
+};
+
 const BasicLayouts = (props) => {
-  const { location, userInfo } = props;
+  const { location, userInfo, dispatch } = props;
   const [collapsed, setCollapsed] = useState(false);
 
   const onCollapse = (collapsed_) => {
@@ -41,16 +49,12 @@ const BasicLayouts = (props) => {
               <Link to="/fileList">检测列表</Link>
             </Menu.Item>
 
-            <Menu.Item key="/imgRegionTool">
+            <Menu.Item key="/imgRegionTool" disabled>
               <Link to="/imgRegionTool">图片标注</Link>
             </Menu.Item>
 
-            <Menu.Item key="/videoTool">
-              <Link to="/videoTool">视频工具</Link>
-            </Menu.Item>
-
-            <Menu.Item key="/showResult" disabled>
-              <Link to="/showResult">×检测结果</Link>
+            <Menu.Item key="/videoTool" disabled>
+              <Link to="/videoTool">视频标注</Link>
             </Menu.Item>
 
             {/* <Menu.Item key="/photoTool">

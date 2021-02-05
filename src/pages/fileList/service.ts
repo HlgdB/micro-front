@@ -1,8 +1,8 @@
 import request from '@/utils/request';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 export const getAllVideo = async () => {
-  return request(`/video`, {
+  return request(`/video/all`, {
     method: 'get',
   });
 };

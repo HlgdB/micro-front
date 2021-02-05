@@ -94,7 +94,7 @@ const Model: ModelType = {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/imgRegionTool') {
+        if (pathname === '/imgRegionTool' || pathname === '/videoTool') {
           dispatch({
             type: 'getTag',
           });

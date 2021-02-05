@@ -6,6 +6,7 @@ export interface IndexModelType {
   state: any;
   effects: {
     setPics: Effect;
+    setVideo: Effect;
     getUserInfo: Effect;
   };
   reducers: {
@@ -19,6 +20,7 @@ const IndexModel: IndexModelType = {
   namespace: 'global',
   state: {
     pics: [],
+    video: undefined,
     userInfo: undefined,
   },
   effects: {
@@ -30,6 +32,12 @@ const IndexModel: IndexModelType = {
       yield put({
         type: 'save',
         payload: { pics: arr },
+      });
+    },
+    *setVideo({ payload }, { put }) {
+      yield put({
+        type: 'save',
+        payload: { video: payload },
       });
     },
     *getUserInfo(action, { put, call }) {

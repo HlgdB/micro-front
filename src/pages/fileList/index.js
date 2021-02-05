@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Menu, Breadcrumb, Button, Table, Tabs } from 'antd';
+import { Menu, Breadcrumb, Button, Table, Tabs, Drawer, Result } from 'antd';
 import './Tag.css';
 import { Input } from 'antd';
 import { Dropdown } from 'antd';
@@ -13,78 +13,55 @@ const { Search } = Input;
 const { TabPane } = Tabs;
 
 const PageTag = (props) => {
-  const { videos, pics, picLoading, dispatch, history } = props;
+  const { videos, pics, picLoading, videoLoading, dispatch, history } = props;
+  const [tab_key, settabkey] = useState('1');
+  const [visible, setvisible] = useState(false);
 
   // useEffect(()=>{
 
   // }, [])
   // console.log(pics);
 
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        <a
-          onClick={() => {
-            dispatch({
-              type: 'fileList/getAllVideo',
-            });
+  const SuccessDrawer = () => {
+    return (
+      <>
+        <Drawer
+          title="检测结果"
+          placement="right"
+          closable={false}
+          onClose={() => {
+            setvisible(false);
           }}
+          visible={visible}
         >
-          全部
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          onClick={() => {
-            dispatch({
-              type: 'fileList/getSelfVideo',
-            });
-          }}
-        >
-          自己上传
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          onClick={() => {
-            dispatch({
-              type: 'fileList/getOthersVideo',
-            });
-          }}
-        >
-          他人上传
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          已检测
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          未检测
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          视频
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          图片
-        </a>
-      </Menu.Item>
-    </Menu>
-  );
+          <Result
+            status="success"
+            title="检测成功!"
+            extra={[
+              <Button
+                type="primary"
+                onClick={() => {
+                  history.push('/videoTool');
+                }}
+              >
+                查看结果
+              </Button>,
+            ]}
+          />
+          ,
+        </Drawer>
+      </>
+    );
+  };
 
   const paginationProps = {
     defaultPageSize: 8,
   };
 
   const VideoPage = () => {
-    const [selectedRowKeys, setselectedRowKeys] = useState([]);
+    // const [selectedRowKeys, setselectedRowKeys] = useState([]);
     const [videodata, setvideodata] = useState(undefined);
+    const [loading, setloading] = useState(false);
 
     useEffect(() => {
       if (!videodata) {
@@ -92,6 +69,85 @@ const PageTag = (props) => {
       }
       return () => {};
     }, [videos]);
+
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a
+            onClick={() => {
+              setloading(true);
+              request(`/video/all`, {
+                method: 'get',
+              }).then((res) => {
+                setvideodata(res);
+                setloading(false);
+              });
+            }}
+          >
+            全部
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a
+            onClick={() => {
+              setloading(true);
+              request(`/video/myself`, {
+                method: 'get',
+              }).then((res) => {
+                setvideodata(res);
+                setloading(false);
+              });
+            }}
+          >
+            自己上传
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a
+            onClick={() => {
+              setloading(true);
+              request(`/video/others`, {
+                method: 'get',
+              }).then((res) => {
+                setvideodata(res);
+                setloading(false);
+              });
+            }}
+          >
+            他人上传
+          </a>
+        </Menu.Item>
+        <Menu.Item disabled>
+          <a target="_blank" rel="noopener noreferrer" href="#">
+            已检测
+          </a>
+        </Menu.Item>
+        <Menu.Item disabled>
+          <a target="_blank" rel="noopener noreferrer" href="#">
+            未检测
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+
+    const onSearch = (value) => {
+      setloading(true);
+      if (value) {
+        request(`/video/search_name/${value}`, {
+          method: 'get',
+        }).then((res) => {
+          setvideodata(res);
+          setloading(false);
+        });
+      } else {
+        request(`/video/all`, {
+          method: 'get',
+        }).then((res) => {
+          setvideodata(res);
+          setloading(false);
+        });
+      }
+    };
 
     const columns = [
       {
@@ -105,12 +161,6 @@ const PageTag = (props) => {
         dataIndex: 'check_status',
         key: 'check_status',
         render: (text) => <span>{text === 1 ? '已检测' : '未检测'}</span>,
-      },
-      {
-        title: '类型',
-        dataIndex: 'file_type',
-        key: 'file_type',
-        render: () => <span>视频</span>,
       },
       {
         title: '创建时间',
@@ -127,23 +177,83 @@ const PageTag = (props) => {
         key: 'action',
         render: (text, record) => (
           <Space size="middle">
-            <a>标注</a>
-            <a>检测</a>
-            <a>删除</a>
+            <a
+              onClick={() => {
+                setloading(true);
+                request(`/video/mark/${record.id}`, {
+                  method: 'get',
+                }).then((res) => {
+                  // console.log("mark res", res?.frames_info)
+                  dispatch({
+                    type: 'global/setVideo',
+                    payload: { ...record, frames: res?.frames_info },
+                  });
+                  setloading(false);
+                  history.push('/videoTool');
+                });
+              }}
+            >
+              标注
+            </a>
+
+            <a
+              onClick={() => {
+                setloading(true);
+                request(`/video/check/${record.id}`, {
+                  method: 'get',
+                }).then((res) => {
+                  if (res) {
+                    request(`/video/mark/${record.id}`, {
+                      method: 'get',
+                    }).then((_res) => {
+                      dispatch({
+                        type: 'global/setVideo',
+                        payload: { ...record, frames: _res?.frames_info },
+                      });
+                      setloading(false);
+                      setvisible(true);
+                    });
+                  }
+                });
+              }}
+            >
+              检测
+            </a>
+
+            <a
+              onClick={() => {
+                // console.log("record", record);
+                setloading(true);
+                request(`/video/search_name/${record.id}`, {
+                  method: 'delete',
+                  data: { ids: [record.id] },
+                }).then((res) => {
+                  console.log(res);
+                  request(`/video/all`, {
+                    method: 'get',
+                  }).then((_res) => {
+                    setvideodata(_res);
+                    setloading(false);
+                  });
+                });
+              }}
+            >
+              删除
+            </a>
           </Space>
         ),
       },
     ];
 
-    const onSelectedRowKeysChange = (selectedRowKeys_) => {
-      setselectedRowKeys({ selectedRowKeys_ });
-      console.log(selectedRowKeys_);
-    };
+    // const onSelectedRowKeysChange = (selectedRowKeys_) => {
+    //   setselectedRowKeys({ selectedRowKeys_ });
+    //   console.log(selectedRowKeys_);
+    // };
 
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: onSelectedRowKeysChange,
-    };
+    // const rowSelection = {
+    //   selectedRowKeys,
+    //   onChange: onSelectedRowKeysChange,
+    // };
 
     return (
       <div
@@ -151,10 +261,30 @@ const PageTag = (props) => {
         style={{ padding: 24, minHeight: 360, float: 'left', width: '100%' }}
       >
         <div style={{ float: 'left' }}>
-          <DatePicker placeholder="选择日期" />
+          <DatePicker
+            placeholder="选择日期"
+            onChange={(date) => {
+              setloading(true);
+              if (date) {
+                request(`/video/search_date/${date.format('YYYY-MM-DD')}`, {
+                  method: 'get',
+                }).then((res) => {
+                  setvideodata(res);
+                  setloading(false);
+                });
+              } else {
+                request(`/video/all`, {
+                  method: 'get',
+                }).then((res) => {
+                  setvideodata(res);
+                  setloading(false);
+                });
+              }
+            }}
+          />
         </div>
         <div style={{ marginLeft: '76%' }}>
-          <Search placeholder="输入关键字" allowClear enterButton="搜索" />
+          <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
         <div style={{ float: 'left' }}>
           <Button style={{ marginTop: 10 }}>一键检测</Button>
@@ -171,8 +301,8 @@ const PageTag = (props) => {
           dataSource={videodata}
           style={{ marginTop: 20 }}
           pagination={paginationProps}
-          rowSelection={rowSelection}
-          loading={false}
+          rowSelection={{}}
+          loading={loading || videoLoading}
           // onRow={(record) => ({})}
         />
       </div>
@@ -240,7 +370,7 @@ const PageTag = (props) => {
             >
               标注
             </a>
-            <a>检测</a>
+            {/* <a>检测</a> */}
             <a>删除</a>
           </Space>
         ),
@@ -284,18 +414,6 @@ const PageTag = (props) => {
         <div style={{ marginLeft: '76%' }}>
           <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
-        <div style={{ float: 'left' }}>
-          <Button style={{ marginTop: 10 }} disabled>
-            一键检测
-          </Button>
-        </div>
-        <div style={{ marginTop: 10, marginLeft: '94%' }}>
-          <Dropdown overlay={menu} disabled>
-            <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-              筛选目标 <DownOutlined />
-            </a>
-          </Dropdown>
-        </div>
         <Table
           columns={columns}
           dataSource={picdata}
@@ -310,15 +428,15 @@ const PageTag = (props) => {
   };
 
   function callback(key) {
-    console.log(key);
+    settabkey(key);
   }
 
   const Pages = () => (
-    <Tabs defaultActiveKey="1" onChange={callback}>
+    <Tabs onChange={callback} activeKey={tab_key}>
       <TabPane tab="图像" key="1">
         <PicPage />
       </TabPane>
-      <TabPane tab="视频" key="2" disabled>
+      <TabPane tab="视频" key="2">
         <VideoPage />
       </TabPane>
     </Tabs>
@@ -331,6 +449,7 @@ const PageTag = (props) => {
         <Breadcrumb.Item>检测列表</Breadcrumb.Item>
       </Breadcrumb>
       <Pages />
+      <SuccessDrawer />
     </div>
   );
 };
@@ -341,6 +460,7 @@ const mapStateToProps = ({ fileList, loading }) => {
     videos: fileList.videos,
     pics: fileList.pics,
     picLoading: loading.effects['fileList/getAllPic'],
+    videoLoading: loading.effects['fileList/getAllVideo'],
   };
 };
 
