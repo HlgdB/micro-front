@@ -13,6 +13,7 @@ export default defineConfig({
   dynamicImport: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   title: '微生物活镜检测系统',
+  favicon: './favicon.ico',
   // routes: [
   //   { path: '/', component: '@/pages/index' },
   // ],
