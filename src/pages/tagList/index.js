@@ -102,7 +102,11 @@ const Index = (props) => {
       title: '标签名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <a>{text}</a>,
+      render: (text) => (
+        <a href={`https://cn.bing.com/search?q=${text}`} target="_blank">
+          {text}
+        </a>
+      ),
     },
     {
       title: '标签描述',

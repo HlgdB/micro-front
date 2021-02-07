@@ -25,14 +25,16 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
   useEffect(() => {
     // console.log("picsInfo：", picsInfo);
     if (picsInfo && picsInfo.length > 0) {
-      // console.log("photo_labels：", JSON.parse(picsInfo[imgIndex].photo_labels));
-      dispatch({
-        type: 'imgRegionTool/setImgRegionTool',
-        payload: {
-          regions: JSON.parse(picsInfo[imgIndex].photo_labels),
-          maxId: JSON.parse(picsInfo[imgIndex].photo_labels).length,
-        },
-      });
+      console.log('photo_labels：', picsInfo[imgIndex].photo_labels);
+      if (picsInfo[imgIndex].photo_labels) {
+        dispatch({
+          type: 'imgRegionTool/setImgRegionTool',
+          payload: {
+            regions: JSON.parse(picsInfo[imgIndex].photo_labels),
+            maxId: JSON.parse(picsInfo[imgIndex].photo_labels).length,
+          },
+        });
+      }
     }
   }, [picsInfo, imgIndex, dispatch]);
 

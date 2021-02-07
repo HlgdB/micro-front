@@ -39,8 +39,9 @@
 }
 
 .Uploadlist {
-  max-width: 1000px;
-  margin-left: 120px;
+  /* max-width: 1000px;
+  margin-left: 120px; */
+  height: 250px;
 }
 
 .id {

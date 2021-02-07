@@ -130,8 +130,8 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
         console.log('res', res);
         if (res?.msg === 'token is invalid' && res.code === 10031) {
           document.cookie = '';
-        }
-        if (typeof res === 'string' && res.search('http') !== -1) {
+          message.warning('登陆状态失效，请点击右上角头像重新登陆！');
+        } else if (typeof res === 'string' && res.search('http') !== -1) {
           resolve({ url: res });
         } else {
           notification.error({

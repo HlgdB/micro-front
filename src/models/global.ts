@@ -55,10 +55,12 @@ const IndexModel: IndexModelType = {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      return history.listen(() => {
-        dispatch({
-          type: 'getUserInfo',
-        });
+      return history.listen(({ pathname }) => {
+        if (pathname !== '/user/login' && pathname !== '/user/post') {
+          dispatch({
+            type: 'getUserInfo',
+          });
+        }
       });
     },
   },

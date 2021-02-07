@@ -7,7 +7,7 @@ import request from '@/utils/request';
 // import Cookies from 'js-cookie';
 
 export const getRemoveList = async () => {
-  return request('/picture/all', {
+  return request('/video/all', {
     method: 'get',
   });
 };

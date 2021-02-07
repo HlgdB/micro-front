@@ -19,7 +19,7 @@ const BaseImage: React.FC<BaseImageProps> = (props) => {
   const imgRef: any = React.useRef(null);
 
   useEffect(() => {
-    console.log('加载图片...', image);
+    console.log('加载图片...');
     // 判断加载图片是否成功
     if (!image) {
       return;

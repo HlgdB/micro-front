@@ -65,6 +65,9 @@ const IndexModel: IndexModelType = {
             type: 'getRemoveList',
           });
           dispatch({
+            type: 'getSelfList',
+          });
+          dispatch({
             type: 'getUserInfo',
           });
         }

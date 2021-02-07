@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Menu, Breadcrumb, Button, Table, Tabs, Drawer, Result } from 'antd';
+import { Menu, Breadcrumb, Button, Table, Tabs, Drawer, Result, message, Tag } from 'antd';
 import './Tag.css';
 import { Input } from 'antd';
 import { Dropdown } from 'antd';
@@ -59,7 +59,7 @@ const PageTag = (props) => {
   };
 
   const VideoPage = () => {
-    // const [selectedRowKeys, setselectedRowKeys] = useState([]);
+    const [selectedRowKeys, setselectedRowKeys] = useState([]);
     const [videodata, setvideodata] = useState(undefined);
     const [loading, setloading] = useState(false);
 
@@ -160,7 +160,16 @@ const PageTag = (props) => {
         title: '检测状态',
         dataIndex: 'check_status',
         key: 'check_status',
-        render: (text) => <span>{text === 1 ? '已检测' : '未检测'}</span>,
+        render: (text) =>
+          text === 1 ? (
+            <Tag key={1} color={'green'}>
+              已检测
+            </Tag>
+          ) : (
+            <Tag key={0} color={'volcano'}>
+              未检测
+            </Tag>
+          ),
       },
       {
         title: '创建时间',
@@ -183,13 +192,18 @@ const PageTag = (props) => {
                 request(`/video/mark/${record.id}`, {
                   method: 'get',
                 }).then((res) => {
-                  // console.log("mark res", res?.frames_info)
-                  dispatch({
-                    type: 'global/setVideo',
-                    payload: { ...record, frames: res?.frames_info },
-                  });
-                  setloading(false);
-                  history.push('/videoTool');
+                  // console.log("mark res", res)
+                  if (res) {
+                    dispatch({
+                      type: 'global/setVideo',
+                      payload: { ...record, frames: res?.frames_info },
+                    });
+                    setloading(false);
+                    history.push('/videoTool');
+                  } else {
+                    setloading(false);
+                    // message.warning("无权限对此文件操作！");
+                  }
                 });
               }}
             >
@@ -213,6 +227,8 @@ const PageTag = (props) => {
                       setloading(false);
                       setvisible(true);
                     });
+                  } else {
+                    setloading(false);
                   }
                 });
               }}
@@ -224,17 +240,25 @@ const PageTag = (props) => {
               onClick={() => {
                 // console.log("record", record);
                 setloading(true);
-                request(`/video/search_name/${record.id}`, {
+                request(`/video`, {
                   method: 'delete',
                   data: { ids: [record.id] },
                 }).then((res) => {
-                  console.log(res);
-                  request(`/video/all`, {
-                    method: 'get',
-                  }).then((_res) => {
-                    setvideodata(_res);
+                  dispatch({
+                    type: 'fileList/getAllVideo',
+                  }).then(() => {
                     setloading(false);
                   });
+                  if (res) {
+                    // console.log("indexof", res["无权限删除文件id："]?.indexOf(record.id))
+                    if (res['无权限删除文件id：']?.indexOf(record.id) !== -1) {
+                      message.warning('无权限删除此文件！');
+                    } else {
+                      message.success('删除视频文件成功！');
+                    }
+                  } else {
+                    message.error('删除视频文件失败！');
+                  }
                 });
               }}
             >
@@ -245,15 +269,15 @@ const PageTag = (props) => {
       },
     ];
 
-    // const onSelectedRowKeysChange = (selectedRowKeys_) => {
-    //   setselectedRowKeys({ selectedRowKeys_ });
-    //   console.log(selectedRowKeys_);
-    // };
+    const onSelectChange = (selectedRowKeys_) => {
+      setselectedRowKeys(selectedRowKeys_);
+      console.log(`selectedRowKeys: ${selectedRowKeys_}`);
+    };
 
-    // const rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: onSelectedRowKeysChange,
-    // };
+    const rowSelection = {
+      onChange: onSelectChange,
+      type: 'checkbox',
+    };
 
     return (
       <div
@@ -287,7 +311,53 @@ const PageTag = (props) => {
           <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
         <div style={{ float: 'left' }}>
-          <Button style={{ marginTop: 10 }}>一键检测</Button>
+          <Button
+            type="primary"
+            style={{ marginTop: 10 }}
+            onClick={() => {
+              setloading(true);
+              // console.log("selectedRowKeys", selectedRowKeys)
+              request('/video/checkAll', {
+                method: 'POST',
+                data: { id: selectedRowKeys },
+              }).then((res) => {
+                // console.log(res);
+                setloading(false);
+              });
+            }}
+          >
+            一键检测
+          </Button>
+          <Button
+            style={{ marginTop: 10, marginLeft: '1rem' }}
+            type="primary"
+            onClick={() => {
+              // console.log("record", record);
+              setloading(true);
+              request(`/video`, {
+                method: 'delete',
+                data: { ids: selectedRowKeys },
+              }).then((res) => {
+                dispatch({
+                  type: 'fileList/getAllVideo',
+                }).then(() => {
+                  setloading(false);
+                });
+                if (res) {
+                  if (res['无权限删除文件id：']?.length > 0) {
+                    message.success('删除视频文件成功！');
+                    message.warning('不是由您上传的部分文件无权限删除！');
+                  } else {
+                    message.success('删除视频文件成功！');
+                  }
+                } else {
+                  message.error('删除视频文件失败！');
+                }
+              });
+            }}
+          >
+            批量删除
+          </Button>
         </div>
         <div style={{ marginTop: 10, marginLeft: '94%' }}>
           <Dropdown overlay={menu}>
@@ -301,7 +371,7 @@ const PageTag = (props) => {
           dataSource={videodata}
           style={{ marginTop: 20 }}
           pagination={paginationProps}
-          rowSelection={{}}
+          rowSelection={rowSelection}
           loading={loading || videoLoading}
           // onRow={(record) => ({})}
         />
@@ -331,13 +401,17 @@ const PageTag = (props) => {
         title: '检测状态',
         dataIndex: 'check_status',
         key: 'check_status',
-        render: (text) => <span>{text === 1 ? '已检测' : '未检测'}</span>,
+        render: (text) =>
+          text === 1 ? (
+            <Tag key={1} color={'green'}>
+              已检测
+            </Tag>
+          ) : (
+            <Tag key={0} color={'volcano'}>
+              未检测
+            </Tag>
+          ),
       },
-      // {
-      //   title: '类型',
-      //   dataIndex: 'file_type',
-      //   key: 'file_type',
-      // },
       {
         title: '创建时间',
         key: 'create_time',

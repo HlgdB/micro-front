@@ -1,4 +1,15 @@
-import { Breadcrumb, Button, Row, Col, Table, List, Select, Space, InputNumber } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Row,
+  Col,
+  Table,
+  List,
+  Select,
+  Space,
+  InputNumber,
+  Statistic,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import Canvas from './Canvas';
 import { connect } from 'umi';
@@ -49,7 +60,7 @@ const Index = (props: any) => {
       dataIndex: 'time',
       key: 'time',
       render: (text: any, record: any) => (
-        <span>{parseFloat(record?.time_str) || record?.time}</span>
+        <Statistic value={parseFloat(record?.time_str) || record?.time} />
       ),
     },
     {
@@ -80,7 +91,7 @@ const Index = (props: any) => {
           >
             标注
           </a>
-          <a
+          {/* <a
             onClick={() => {
               // const arr = videoTool.screenShots.filter(
               //   (item: any) => item !== videoTool.screenShots[index],
@@ -92,7 +103,7 @@ const Index = (props: any) => {
             }}
           >
             删除
-          </a>
+          </a> */}
         </Space>
       ),
     },

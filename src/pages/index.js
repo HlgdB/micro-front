@@ -26,13 +26,13 @@ const MainList = (props) => {
               <p className="projectName">{`邮箱：${mainlist.userInfo?.email}`}</p>
             </div>
             <Col className="data" span={2}>
-              <Statistic title="文件数" value={mainlist.allList?.length} />
+              <Statistic title="视频数" value={mainlist.allList?.length} />
             </Col>
-            <Col className="data" span={2}>
+            {/* <Col className="data" span={2}>
               <Statistic title="已检测" value={1} />
-            </Col>
+            </Col> */}
             <Col className="data" span={2}>
-              <Statistic title="自己上传" value={0} />
+              <Statistic title="自己上传" value={mainlist.selfList?.length} />
             </Col>
           </Row>
         </div>
@@ -42,18 +42,10 @@ const MainList = (props) => {
           <Spin spinning={loading}>
             <List
               grid={{ gutter: 16, column: 3 }}
-              dataSource={mainlist.allList}
+              dataSource={mainlist.selfList}
               renderItem={(item) => (
                 <List.Item>
-                  <Card
-                    style={{ width: 350 }}
-                    // actions={[
-                    //   // <SettingOutlined key="setting" />,
-                    //   // <EditOutlined key="edit" />,
-                    //   <p>编辑</p>,
-                    //   <p>删除</p>,
-                    // ]}
-                  >
+                  <Card style={{ width: 350 }}>
                     <Meta
                       className="Cardtitle"
                       avatar={<Avatar src={titlepic} />}
