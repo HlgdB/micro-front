@@ -321,7 +321,16 @@ const PageTag = (props) => {
                 method: 'POST',
                 data: { id: selectedRowKeys },
               }).then((res) => {
-                // console.log(res);
+                if (res) {
+                  if (res['无权限检测文件id：']?.length > 0) {
+                    message.success('一键检测成功，点击对应文件标注查看检测结果！');
+                    message.warning('部分不是由您上传的文件无权限检测！');
+                  } else {
+                    message.success('一键检测成功，点击对应文件标注查看检测结果！');
+                  }
+                } else {
+                  message.error('一键检测视频文件失败！');
+                }
                 setloading(false);
               });
             }}
