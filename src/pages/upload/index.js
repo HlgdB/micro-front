@@ -14,7 +14,7 @@ const pagination = { position: 'bottom' };
 const props = {
   name: 'file',
   multiple: true,
-  action: 'https://www.bossk.top/v2/file/upload',
+  action: 'https://wswjc.huaxindata.com.cn/v2/file/upload',
   headers: {
     Authorization: `Bearer ${Cookies.get('token')}`,
   },
@@ -24,10 +24,10 @@ const props = {
       console.log(info.file, info.fileList);
     }
     if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
+      message.success(`${info.file.name} 上传成功！`);
       console.log(info);
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message.error(`${info.file.name} 上传失败！`);
     }
   },
   defaultFileList: [],

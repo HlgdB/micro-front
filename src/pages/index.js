@@ -2,7 +2,6 @@ import 'antd/dist/antd.css';
 import React, { useState, useEffect } from 'react';
 import { Breadcrumb, Statistic, Row, Col, Spin } from 'antd';
 import './main.css';
-import titlepic from './static/cat.jpg';
 import { Card, Avatar, List } from 'antd';
 import { connect } from 'umi';
 
@@ -20,7 +19,11 @@ const MainList = (props) => {
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
         <div className="dataShow">
           <Row gutter={16}>
-            <img className="Userpic" src={titlepic} alt="" />
+            <img
+              className="Userpic"
+              src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
+              alt=""
+            />
             <div className="Usertext">
               <p className="projectName">{`用户名：${mainlist.userInfo?.nickname}`}</p>
               <p className="projectName">{`邮箱：${mainlist.userInfo?.email}`}</p>
@@ -48,7 +51,9 @@ const MainList = (props) => {
                   <Card style={{ width: 350 }}>
                     <Meta
                       className="Cardtitle"
-                      avatar={<Avatar src={titlepic} />}
+                      avatar={
+                        <Avatar src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg" />
+                      }
                       title={item.creator_name}
                       description={item.name}
                     />

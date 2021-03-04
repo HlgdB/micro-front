@@ -29,17 +29,15 @@ class Post extends React.Component {
             name="register"
             scrollToFirstError
             onFinish={(values) => {
-              // console.log("注册信息", { type: 100, ...values })
+              console.log('注册信息', { type: 100, ...values });
               request('/client/register', {
                 method: 'POST',
                 data: { type: 100, ...values },
               }).then((res) => {
                 console.log('注册结果', res);
                 if (res) {
-                  if (res.code === 200) {
-                    message.success(res.msg);
-                    history.push('/user/login');
-                  }
+                  message.success('注册成功！');
+                  history.push('/user/login');
                 } else {
                   message.error('注册失败，请检查用户名或邮箱是否重复！');
                 }

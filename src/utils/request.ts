@@ -33,11 +33,11 @@ const config = {
   mock: 'https://kskdop7w-xloskyer.mock.coding.io',
   mock_auth: 'https://kskdop7w-xloskyer.mock.coding.io',
   // 测试服务器地址
-  pre: 'https://www.bossk.top/v2',
-  pre_auth: 'https://www.bossk.top/v2',
+  pre: 'https://wswjc.huaxindata.com.cn/v2',
+  pre_auth: 'https://wswjc.huaxindata.com.cn/v2',
   // 生产环境地址
-  prod: 'https://www.bossk.top/v2',
-  prod_auth: 'https://www.bossk.top/v2',
+  prod: 'https://wswjc.huaxindata.com.cn/v2',
+  prod_auth: 'https://wswjc.huaxindata.com.cn/v2',
 };
 // #endregion
 

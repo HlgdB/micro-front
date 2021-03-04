@@ -9,6 +9,8 @@ import {
   Space,
   InputNumber,
   Statistic,
+  message,
+  Alert,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Canvas from './Canvas';
@@ -121,7 +123,7 @@ const Index = (props: any) => {
     canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     dispatch({
-      type: 'videoTool/setVideoMark',
+      type: 'videoTool/setVideoMark_2',
       payload: {
         video_id,
         time: video?.currentTime,
@@ -146,12 +148,17 @@ const Index = (props: any) => {
         <Breadcrumb.Item>活体检测</Breadcrumb.Item>
         <Breadcrumb.Item>视频工具</Breadcrumb.Item>
       </Breadcrumb>
+      <Alert
+        message="提示：在上方视频框中播放视频时可以点击截图抽取播放到的当前帧，然后在右侧表格中选取对应的帧点击标注，就可以在下方图片框中对选取的帧图像进行图片标注。"
+        type="info"
+      />
       <div
         id="header-nav"
         style={{
           padding: 12,
           // width: 800,
           border: '1px solid #d9d9d9',
+          marginTop: 10,
           marginBottom: 10,
           backgroundColor: 'white',
         }}
@@ -282,12 +289,14 @@ const Index = (props: any) => {
       </div>
 
       <Row gutter={16} style={{ height: 520, backgroundColor: 'white', marginTop: 16 }}>
-        <Col span={12.5} style={{ marginTop: 20 }}>
-          <Canvas ref={childRef} imgUrl={img} stageAttribute={{ width: 640, height: 480 }} />
+        <Col span={12} style={{ marginTop: 20 }}>
+          <div style={{ width: 640, height: '100%' }}>
+            <Canvas ref={childRef} imgUrl={img} stageAttribute={{ width: 640, height: 480 }} />
+          </div>
         </Col>
 
         <Col
-          span={11}
+          span={12}
           style={{
             height: 480,
             overflowX: 'hidden',

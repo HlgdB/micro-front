@@ -3,19 +3,10 @@ import { Link, connect } from 'umi';
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import style from './style.less';
-import titlepic from '@/assets/cat.jpg';
 import { TagOutlined, BulbOutlined, FolderOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-
-const init_data = {
-  regions: [],
-  maxId: 0,
-  toolState: 'default',
-  regionsStrokeWidth: 3, // 选区线宽
-  regionsFontSize: 21, // 选区字体大小
-};
 
 const BasicLayouts = (props) => {
   const { location, userInfo, dispatch } = props;
@@ -48,14 +39,14 @@ const BasicLayouts = (props) => {
             <Menu.Item key="/fileList">
               <Link to="/fileList">检测列表</Link>
             </Menu.Item>
-
+            {/* 
             <Menu.Item key="/imgRegionTool" disabled>
               <Link to="/imgRegionTool">图片标注</Link>
             </Menu.Item>
 
             <Menu.Item key="/videoTool" disabled>
               <Link to="/videoTool">视频标注</Link>
-            </Menu.Item>
+            </Menu.Item> */}
 
             {/* <Menu.Item key="/photoTool">
               <Link to="/photoTool">图片工具</Link>
@@ -72,7 +63,11 @@ const BasicLayouts = (props) => {
         <Header className={style.site_layout_background} style={{ padding: 0 }}>
           <div className="id" style={{ width: '100%' }}>
             <Link to="/user/login">
-              <img className={style.titlepic} src={titlepic} alt="" />
+              <img
+                className={style.titlepic}
+                src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
+                alt=""
+              />
             </Link>
             {userInfo?.nickname}
           </div>

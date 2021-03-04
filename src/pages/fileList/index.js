@@ -1,7 +1,18 @@
 import 'antd/dist/antd.css';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
-import { Menu, Breadcrumb, Button, Table, Tabs, Drawer, Result, message, Tag } from 'antd';
+import {
+  Menu,
+  Breadcrumb,
+  Button,
+  Table,
+  Tabs,
+  Drawer,
+  Result,
+  message,
+  Tag,
+  Popconfirm,
+} from 'antd';
 import './Tag.css';
 import { Input } from 'antd';
 import { Dropdown } from 'antd';
@@ -210,8 +221,9 @@ const PageTag = (props) => {
               标注
             </a>
 
-            <a
-              onClick={() => {
+            <Popconfirm
+              title="已检测的视频再次检测会覆盖原先结果，确定检测吗？"
+              onConfirm={() => {
                 setloading(true);
                 request(`/video/check/${record.id}`, {
                   method: 'get',
@@ -232,9 +244,11 @@ const PageTag = (props) => {
                   }
                 });
               }}
+              okText="确定"
+              cancelText="取消"
             >
-              检测
-            </a>
+              <a>检测</a>
+            </Popconfirm>
 
             <a
               onClick={() => {
@@ -391,6 +405,7 @@ const PageTag = (props) => {
   const PicPage = () => {
     // const [selectedRowKeys, setselectedRowKeys] = useState([]);
     const [picdata, setpicdata] = useState(undefined);
+    const [loading, setloading] = useState(false);
 
     useEffect(() => {
       if (!picdata) {
@@ -439,6 +454,7 @@ const PageTag = (props) => {
             <a
               onClick={() => {
                 // console.log(record);
+                setloading(true);
                 request(`/picture/${record.id}`, {
                   method: 'GET',
                 }).then((res) => {
@@ -446,6 +462,8 @@ const PageTag = (props) => {
                   dispatch({
                     type: 'global/setPics',
                     payload: res,
+                  }).then(() => {
+                    setloading(false);
                   });
                   history.push('/imgRegionTool');
                 });
@@ -492,7 +510,27 @@ const PageTag = (props) => {
         style={{ padding: 24, minHeight: 360, float: 'left', width: '100%' }}
       >
         <div style={{ float: 'left' }}>
-          <DatePicker placeholder="选择日期" disabled />
+          <DatePicker
+            placeholder="选择日期"
+            onChange={(date) => {
+              setloading(true);
+              if (date) {
+                request(`/picture/search_date/${date.format('YYYY-MM-DD')}`, {
+                  method: 'get',
+                }).then((res) => {
+                  setpicdata(res);
+                  setloading(false);
+                });
+              } else {
+                request(`/picture/all`, {
+                  method: 'get',
+                }).then((res) => {
+                  setpicdata(res);
+                  setloading(false);
+                });
+              }
+            }}
+          />
         </div>
         <div style={{ marginLeft: '76%' }}>
           <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
@@ -503,7 +541,7 @@ const PageTag = (props) => {
           style={{ marginTop: 20 }}
           pagination={paginationProps}
           rowSelection={{}}
-          loading={picLoading}
+          loading={picLoading || loading}
           // onRow={(record) => ({})}
         />
       </div>

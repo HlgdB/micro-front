@@ -1,14 +1,14 @@
 export default {
   dev: {
     '/micro': {
-      target: 'https://www.bossk.top/v2',
+      target: 'https://wswjc.huaxindata.com.cn/v2',
       changeOrigin: true,
       pathRewrite: {
         '^/sea': '',
       },
     },
     '/api': {
-      target: 'https://www.bossk.top/v2',
+      target: 'https://wswjc.huaxindata.com.cn/v2',
       changeOrigin: true,
       pathRewrite: {
         '^/api': '',

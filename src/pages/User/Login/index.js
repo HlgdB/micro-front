@@ -26,7 +26,11 @@ const NormalLoginForm = (props) => {
   return (
     <div className="background">
       <div className="title">
-        <img className="pic" src={titlepic} alt="" />
+        <img
+          className="pic"
+          src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
+          alt=""
+        />
 
         <font className="projectName" size="5">
           {'     '.replace(/ /g, '\u00a0')}微生物活镜检测系统
