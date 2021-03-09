@@ -2,7 +2,6 @@ import { Link, history } from 'umi';
 import 'antd/dist/antd.css';
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import titlepic from '@/assets/cat.jpg';
 import './post.css';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import request from '@/utils/request';
@@ -12,7 +11,11 @@ class Post extends React.Component {
     return (
       <div className="background">
         <div className="title">
-          <img className="pic" src={titlepic} alt="" />
+          <img
+            className="pic"
+            src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
+            alt=""
+          />
 
           <font className="projectName" size="5">
             {'     '.replace(/ /g, '\u00a0')}微生物活镜检测系统

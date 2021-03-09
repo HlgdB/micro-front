@@ -12,6 +12,8 @@ import {
   message,
   Tag,
   Popconfirm,
+  notification,
+  Alert,
 } from 'antd';
 import './Tag.css';
 import { Input } from 'antd';
@@ -203,17 +205,45 @@ const PageTag = (props) => {
                 request(`/video/mark/${record.id}`, {
                   method: 'get',
                 }).then((res) => {
-                  // console.log("mark res", res)
+                  console.log('mark res', res);
                   if (res) {
                     dispatch({
                       type: 'global/setVideo',
-                      payload: { ...record, frames: res?.frames_info },
+                      payload: { ...record, frames: res?.frames_info, editable: 0 },
                     });
                     setloading(false);
                     history.push('/videoTool');
                   } else {
                     setloading(false);
-                    // message.warning("无权限对此文件操作！");
+                  }
+                });
+              }}
+            >
+              查看
+            </a>
+            <a
+              onClick={() => {
+                setloading(true);
+                request(`/video/mark/${record.id}`, {
+                  method: 'get',
+                }).then((res) => {
+                  // console.log("mark res", res);
+                  if (res) {
+                    if (res?.editable === 1) {
+                      dispatch({
+                        type: 'global/setVideo',
+                        payload: { ...record, frames: res?.frames_info, editable: 1 },
+                      });
+                      setloading(false);
+                      history.push('/videoTool');
+                    } else {
+                      setloading(false);
+                      notification.error({
+                        message: '无权限对此文件进行操作！',
+                      });
+                    }
+                  } else {
+                    setloading(false);
                   }
                 });
               }}
@@ -234,7 +264,7 @@ const PageTag = (props) => {
                     }).then((_res) => {
                       dispatch({
                         type: 'global/setVideo',
-                        payload: { ...record, frames: _res?.frames_info },
+                        payload: { ...record, frames: _res?.frames_info, editable: 0 },
                       });
                       setloading(false);
                       setvisible(true);
@@ -285,7 +315,7 @@ const PageTag = (props) => {
 
     const onSelectChange = (selectedRowKeys_) => {
       setselectedRowKeys(selectedRowKeys_);
-      console.log(`selectedRowKeys: ${selectedRowKeys_}`);
+      // console.log(`selectedRowKeys: ${selectedRowKeys_}`);
     };
 
     const rowSelection = {
@@ -325,10 +355,9 @@ const PageTag = (props) => {
           <Search placeholder="输入关键字" allowClear enterButton="搜索" onSearch={onSearch} />
         </div>
         <div style={{ float: 'left' }}>
-          <Button
-            type="primary"
-            style={{ marginTop: 10 }}
-            onClick={() => {
+          <Popconfirm
+            title="已检测的视频再次检测会覆盖原先结果，确定检测吗？"
+            onConfirm={() => {
               setloading(true);
               // console.log("selectedRowKeys", selectedRowKeys)
               request('/video/checkAll', {
@@ -345,12 +374,18 @@ const PageTag = (props) => {
                 } else {
                   message.error('一键检测视频文件失败！');
                 }
+                dispatch({
+                  type: 'fileList/getAllVideo',
+                });
                 setloading(false);
               });
             }}
           >
-            一键检测
-          </Button>
+            <Button type="primary" style={{ marginTop: 10 }}>
+              一键检测
+            </Button>
+          </Popconfirm>
+
           <Button
             style={{ marginTop: 10, marginLeft: '1rem' }}
             type="primary"
@@ -459,19 +494,54 @@ const PageTag = (props) => {
                   method: 'GET',
                 }).then((res) => {
                   // console.log("pic info: ", res)
-                  dispatch({
-                    type: 'global/setPics',
-                    payload: res,
-                  }).then(() => {
+                  if (res) {
+                    dispatch({
+                      type: 'global/setPics',
+                      payload: res,
+                    }).then(() => {
+                      setloading(false);
+                    });
+                    history.push('/imgRegionTool');
+                  } else {
                     setloading(false);
-                  });
-                  history.push('/imgRegionTool');
+                  }
+                });
+              }}
+            >
+              查看
+            </a>
+            <a
+              onClick={() => {
+                // console.log(record);
+                setloading(true);
+                request(`/picture/${record.id}`, {
+                  method: 'GET',
+                }).then((res) => {
+                  // console.log("pic info: ", res);
+                  if (res) {
+                    if (res.editable === 1) {
+                      dispatch({
+                        type: 'global/setPics',
+                        payload: res,
+                      }).then(() => {
+                        setloading(false);
+                      });
+                      history.push('/imgRegionTool');
+                    } else {
+                      setloading(false);
+                      notification.error({
+                        message: '无权限对此文件进行操作！',
+                      });
+                    }
+                  } else {
+                    setloading(false);
+                  }
                 });
               }}
             >
               标注
             </a>
-            {/* <a>检测</a> */}
+            <a>检测</a>
             <a>删除</a>
           </Space>
         ),
@@ -569,6 +639,10 @@ const PageTag = (props) => {
         <Breadcrumb.Item>活体检测</Breadcrumb.Item>
         <Breadcrumb.Item>检测列表</Breadcrumb.Item>
       </Breadcrumb>
+      <Alert
+        message="在本页面中查看所有上传的文件并对自己上传的进行操作。查看：查看对应文件信息但无法对其修改保存；标注：查看并对图片或视频中的微生物进行标注；检测：由系统对图片或视频进行微生物识别。"
+        type="info"
+      />
       <Pages />
       <SuccessDrawer />
     </div>

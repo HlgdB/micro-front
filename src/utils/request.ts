@@ -91,7 +91,7 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
   }
 
   // 判断cookie是否失效
-  if (url !== '/token' && Cookies.get('token') === undefined) {
+  if (url !== '/token' && url !== '/client/register' && Cookies.get('token') === undefined) {
     console.log(url);
     console.log(Cookies.get('token'));
     // 防止同时多次请求
@@ -118,7 +118,7 @@ function custom_request(url: string, { method = 'GET', params = {}, data = {} })
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
     }).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res && res.code === 200) {
         // 如果post请求没有data，就返回true，以便判断generator下一步执行
         if (res.total !== undefined) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, List, InputNumber, Space, Select, Breadcrumb } from 'antd';
+import { Button, List, InputNumber, Space, Select, Breadcrumb, message, Row, Col } from 'antd';
 
 import { connect, Dispatch } from 'umi';
 import { StateType } from './model';
@@ -23,7 +23,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
-    // console.log("picsInfo：", picsInfo);
+    console.log('picsInfo：', picsInfo);
     if (picsInfo && picsInfo.length > 0) {
       console.log('photo_labels：', picsInfo[imgIndex].photo_labels);
       if (picsInfo[imgIndex].photo_labels) {
@@ -80,6 +80,7 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
           </Button>
           <Button
             type="primary"
+            style={{ display: picsInfo[0]?.editable === 1 ? 'block' : 'none' }}
             onClick={() => {
               dispatch({
                 type: 'imgRegionTool/setImgRegionTool',
@@ -91,24 +92,35 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
           >
             选区
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               setImgIndex((imgIndex + 1) % picsInfo.length);
             }}
             disabled={!(picsInfo > 1)}
           >
             切换图片
-          </Button>
+          </Button> */}
           <Button
             type="primary"
+            style={{ display: picsInfo[0]?.editable === 1 ? 'block' : 'none' }}
             onClick={() => {
-              dispatch({
-                type: 'imgRegionTool/setPicMark',
-                payload: {
-                  photo_id: picsInfo[imgIndex]?.id,
-                  photo_labels: JSON.stringify(imgRegionTool?.regions),
-                },
-              });
+              let signal = 0;
+              for (let i = 0; i < imgRegionTool?.regions.length; i += 1) {
+                if (imgRegionTool?.regions[i].name.indexOf('New Region') !== -1) {
+                  signal = 1;
+                }
+              }
+              if (signal === 1) {
+                message.warn('存在选区没有选定标签，请选择！');
+              } else {
+                dispatch({
+                  type: 'imgRegionTool/setPicMark',
+                  payload: {
+                    photo_id: picsInfo[imgIndex]?.id,
+                    photo_labels: JSON.stringify(imgRegionTool?.regions),
+                  },
+                });
+              }
             }}
           >
             保存
@@ -142,18 +154,82 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
         </Space>
       </div>
       <div id="main_window" style={{ display: 'block', height: 520, backgroundColor: 'white' }}>
-        <div
-          id="right-panel"
-          style={{ width: 640, marginRight: 20, marginLeft: 10, marginTop: 20, float: 'left' }}
-        >
-          <Canvas
-            ref={childRef}
-            imgUrl={picsInfo[imgIndex]?.photo_url}
-            stageAttribute={{ width: 640, height: 480 }}
-          />
-        </div>
+        <Row gutter={16} style={{ height: 520, backgroundColor: 'white', marginTop: 16 }}>
+          <Col span={12}>
+            <div
+              id="right-panel"
+              style={{ width: 640, marginRight: 20, marginLeft: 10, marginTop: 20, float: 'left' }}
+            >
+              <Canvas
+                ref={childRef}
+                imgUrl={picsInfo[imgIndex]?.photo_url}
+                stageAttribute={{ width: 640, height: 480 }}
+              />
+            </div>
+          </Col>
+          <Col
+            span={12}
+            style={{
+              height: 480,
+              overflowX: 'hidden',
+              overflowY: 'auto',
+              marginTop: 20,
+            }}
+          >
+            <List
+              header={<div>选区</div>}
+              bordered
+              dataSource={imgRegionTool?.regions}
+              // style={{height: 480}}
+              renderItem={(region: any, index: number) => (
+                <List.Item>
+                  <span style={{ width: 40 }}>{index + 1}</span>
+                  <Select
+                    style={{ width: 350 }}
+                    placeholder="选择微生物"
+                    value={region.name}
+                    onChange={(e) => {
+                      // console.log(e);
+                      if (imgRegionTool) {
+                        region.name = e;
+                        imgRegionTool.regions[index] = region;
+                        dispatch({
+                          type: 'imgRegionTool/setImgRegionTool',
+                          payload: { regions: imgRegionTool.regions },
+                        });
+                      }
+                    }}
+                  >
+                    {tags?.map((item: any) => {
+                      return <Option value={item.name}>{item.name}</Option>;
+                    })}
+                  </Select>
+                  <Button
+                    onClick={() => {
+                      if (imgRegionTool) {
+                        imgRegionTool.regions.splice(index, 1);
+                        dispatch({
+                          type: 'imgRegionTool/setImgRegionTool',
+                          payload: {
+                            regions: imgRegionTool.regions,
+                            maxId: imgRegionTool.maxId - 1,
+                          },
+                        });
+                      }
+                    }}
+                    style={{ marginLeft: 10 }}
+                    type="primary"
+                    danger
+                  >
+                    删除
+                  </Button>
+                </List.Item>
+              )}
+            />
+          </Col>
+        </Row>
 
-        <div
+        {/* <div
           id="Left-panel"
           style={{
             width: '45%',
@@ -164,54 +240,8 @@ const ImgRegionToolDemo: React.FC<ImgRegionToolProps> = (props) => {
             marginTop: 20,
           }}
         >
-          <List
-            header={<div>选区</div>}
-            bordered
-            dataSource={imgRegionTool?.regions}
-            // style={{height: 480}}
-            renderItem={(region: any, index: number) => (
-              <List.Item>
-                <span style={{ width: 40 }}>{index + 1}</span>
-                <Select
-                  style={{ width: 350 }}
-                  placeholder="选择微生物"
-                  value={region.name}
-                  onChange={(e) => {
-                    // console.log(e);
-                    if (imgRegionTool) {
-                      region.name = e;
-                      imgRegionTool.regions[index] = region;
-                      dispatch({
-                        type: 'imgRegionTool/setImgRegionTool',
-                        payload: { regions: imgRegionTool.regions },
-                      });
-                    }
-                  }}
-                >
-                  {tags?.map((item: any) => {
-                    return <Option value={item.name}>{item.name}</Option>;
-                  })}
-                </Select>
-                <Button
-                  onClick={() => {
-                    if (imgRegionTool) {
-                      imgRegionTool.regions.splice(index, 1);
-                      dispatch({
-                        type: 'imgRegionTool/setImgRegionTool',
-                        payload: { regions: imgRegionTool.regions, maxId: imgRegionTool.maxId - 1 },
-                      });
-                    }
-                  }}
-                  style={{ marginLeft: 10 }}
-                  type="primary"
-                  danger
-                >
-                  删除
-                </Button>
-              </List.Item>
-            )}
-          />
-        </div>
+          
+        </div> */}
       </div>
     </div>
   );

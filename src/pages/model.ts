@@ -1,5 +1,11 @@
 import { Effect, Reducer, Subscription } from 'umi';
-import { getRemoveList, getSelfList, getUserInfo } from './service';
+import {
+  getRemoveList,
+  getSelfList,
+  getUserInfo,
+  getPicRemoveList,
+  getPicSelfList,
+} from './service';
 
 export interface IndexModelType {
   namespace: 'mainlist';
@@ -8,6 +14,8 @@ export interface IndexModelType {
     // query: Effect;
     getRemoveList: Effect;
     getSelfList: Effect;
+    getPicRemoveList: Effect;
+    getPicSelfList: Effect;
     getUserInfo: Effect;
   };
   reducers: {
@@ -22,6 +30,8 @@ const IndexModel: IndexModelType = {
   state: {
     allList: undefined,
     selfList: undefined,
+    allPicList: undefined,
+    selfPicList: undefined,
     userInfo: undefined,
   },
   effects: {
@@ -38,6 +48,20 @@ const IndexModel: IndexModelType = {
       yield put({
         type: 'save',
         payload: { selfList: data },
+      });
+    },
+    *getPicRemoveList(action, { put, call }) {
+      const data = yield call(getPicRemoveList);
+      yield put({
+        type: 'save',
+        payload: { allPicList: data },
+      });
+    },
+    *getPicSelfList(action, { put, call }) {
+      const data = yield call(getPicSelfList);
+      yield put({
+        type: 'save',
+        payload: { selfPicList: data },
       });
     },
     *getUserInfo(action, { put, call }) {
@@ -66,6 +90,12 @@ const IndexModel: IndexModelType = {
           });
           dispatch({
             type: 'getSelfList',
+          });
+          dispatch({
+            type: 'getPicRemoveList',
+          });
+          dispatch({
+            type: 'getPicSelfList',
           });
           dispatch({
             type: 'getUserInfo',

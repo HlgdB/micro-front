@@ -45,7 +45,7 @@ const IndexModel: IndexModelType = {
         });
         message.success('修改成功！');
       } else {
-        message.success('修改失败！');
+        message.error('修改失败！');
       }
     },
     *addTag({ payload }, { put, call }) {

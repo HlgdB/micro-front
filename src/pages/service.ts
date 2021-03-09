@@ -18,6 +18,18 @@ export const getSelfList = async () => {
   });
 };
 
+export const getPicRemoveList = async () => {
+  return request('/picture/all', {
+    method: 'get',
+  });
+};
+
+export const getPicSelfList = async () => {
+  return request(`/picture/myself`, {
+    method: 'get',
+  });
+};
+
 export const getUserInfo = async () => {
   return request('/user/info', {
     method: 'GET',

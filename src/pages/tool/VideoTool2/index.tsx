@@ -149,6 +149,7 @@ const Index = (props: any) => {
         <Breadcrumb.Item>视频工具</Breadcrumb.Item>
       </Breadcrumb>
       <Alert
+        style={{ display: videoInfo.editable === 1 ? 'block' : 'none' }}
         message="提示：在上方视频框中播放视频时可以点击截图抽取播放到的当前帧，然后在右侧表格中选取对应的帧点击标注，就可以在下方图片框中对选取的帧图像进行图片标注。"
         type="info"
       />
@@ -161,6 +162,7 @@ const Index = (props: any) => {
           marginTop: 10,
           marginBottom: 10,
           backgroundColor: 'white',
+          display: videoInfo.editable === 1 ? 'block' : 'none',
         }}
       >
         <Space>
@@ -223,6 +225,7 @@ const Index = (props: any) => {
           </Button>
           <Button
             type="primary"
+            style={{ display: videoInfo.editable === 1 ? 'block' : 'none' }}
             onClick={() => {
               dispatch({
                 type: 'imgRegionTool/setImgRegionTool',
@@ -236,25 +239,36 @@ const Index = (props: any) => {
           </Button>
           <Button
             type="primary"
+            style={{ display: videoInfo.editable === 1 ? 'block' : 'none' }}
             onClick={() => {
-              dispatch({
-                type: 'videoTool/setVideoMark',
-                payload: {
-                  video_id,
-                  time,
-                  frame_labels: imgRegionTool.regions,
-                },
-              }).then(() => {
-                request(`/video/mark/${video_id}`, {
-                  method: 'get',
-                }).then((save_res: any) => {
-                  // console.log(save_res);
-                  dispatch({
-                    type: 'global/setVideo',
-                    payload: { ...videoInfo, frames: save_res?.frames_info },
+              let signal = 0;
+              for (let i = 0; i < imgRegionTool?.regions.length; i += 1) {
+                if (imgRegionTool?.regions[i].name.indexOf('New Region') !== -1) {
+                  signal = 1;
+                }
+              }
+              if (signal === 1) {
+                message.warn('存在选区没有选定标签，请选择！');
+              } else {
+                dispatch({
+                  type: 'videoTool/setVideoMark',
+                  payload: {
+                    video_id,
+                    time,
+                    frame_labels: imgRegionTool.regions,
+                  },
+                }).then(() => {
+                  request(`/video/mark/${video_id}`, {
+                    method: 'get',
+                  }).then((save_res: any) => {
+                    // console.log(save_res);
+                    dispatch({
+                      type: 'global/setVideo',
+                      payload: { ...videoInfo, frames: save_res?.frames_info },
+                    });
                   });
                 });
-              });
+              }
             }}
           >
             保存

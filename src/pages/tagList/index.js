@@ -3,7 +3,7 @@ import { connect } from 'umi';
 import React, { useState } from 'react';
 import { Breadcrumb, Modal } from 'antd';
 import './PageprTagList.css';
-import { Table, Input, Form, Button } from 'antd';
+import { Table, Input, Form, Button, Alert } from 'antd';
 
 const { Search } = Input;
 
@@ -11,6 +11,7 @@ const Index = (props) => {
   const { tags, loading, dispatch } = props;
 
   const AddModal = () => {
+    const [addForm] = Form.useForm();
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {
@@ -18,6 +19,7 @@ const Index = (props) => {
     };
 
     const handleOk = () => {
+      addForm.submit();
       setIsModalVisible(false);
     };
 
@@ -35,10 +37,11 @@ const Index = (props) => {
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
-          okText="确认"
+          okText="提交"
           cancelText="取消"
         >
           <Form
+            form={addForm}
             onFinish={(values) => {
               dispatch({
                 type: 'tagList/addTag',
@@ -52,11 +55,11 @@ const Index = (props) => {
             <Form.Item name="description" label="描述">
               <Input />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
               <Button type="primary" htmlType="submit">
                 提交
               </Button>
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </Modal>
       </>
@@ -174,6 +177,7 @@ const Index = (props) => {
         <Breadcrumb.Item>标签管理</Breadcrumb.Item>
         <Breadcrumb.Item>标签列表</Breadcrumb.Item>
       </Breadcrumb>
+      <Alert message="在本页面中上传或者修改标注微生物时使用的标签。" type="info" />
       <PrivateTagList />
     </div>
   );
