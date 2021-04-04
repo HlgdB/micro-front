@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import './post.css';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import titlepic from '@/assets/cat.jpg';
 import request from '@/utils/request';
 
 class Post extends React.Component {
@@ -11,11 +12,7 @@ class Post extends React.Component {
     return (
       <div className="background">
         <div className="title">
-          <img
-            className="pic"
-            src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
-            alt=""
-          />
+          <img className="pic" src={titlepic} alt="" />
 
           <font className="projectName" size="5">
             {'     '.replace(/ /g, '\u00a0')}微生物活镜检测系统
@@ -83,13 +80,13 @@ class Post extends React.Component {
                   message: '请输入您的密码',
                 },
                 {
-                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,16}$/,
-                  message: '密码至少包含1个大写字母，小写字母，数字和特殊字符!',
+                  pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+                  message: '密码至少包含数字和英文，长度6-20!',
                 },
               ]}
               hasFeedback
             >
-              <Input.Password prefix={<LockOutlined />} placeholder="8到16位密码，区分大写小写" />
+              <Input.Password prefix={<LockOutlined />} placeholder="区分大写小写" />
             </Form.Item>
 
             <Form.Item

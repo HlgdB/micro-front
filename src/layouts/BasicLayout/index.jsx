@@ -15,6 +15,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import CookieUtil from '@/utils/cookie.js';
+import titlepic from '@/assets/cat.jpg';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -99,11 +100,7 @@ const BasicLayouts = (props) => {
         <Header className={style.site_layout_background} style={{ padding: 0 }}>
           <div className="id" style={{ width: '100%' }}>
             <Dropdown overlay={menu} placement="bottomRight">
-              <img
-                className={style.titlepic}
-                src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
-                alt=""
-              />
+              <img className={style.titlepic} src={titlepic} alt="" />
             </Dropdown>
             <b style={{ marginRight: 16 }}>{userInfo?.nickname}</b>
           </div>

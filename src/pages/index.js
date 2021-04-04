@@ -1,12 +1,13 @@
 import 'antd/dist/antd.css';
 import { history } from 'umi';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb, Statistic, Row, Col, Spin, Tabs } from 'antd';
 import './main.css';
 import { Card, Avatar, List } from 'antd';
 import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 import request from '@/utils/request';
+import titlepic from '@/assets/cat.jpg';
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -25,11 +26,7 @@ const MainList = (props) => {
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
         <div className="dataShow">
           <Row gutter={16}>
-            <img
-              className="Userpic"
-              src="https://assets-kxwv3nawl-blnbin.vercel.app/micro/cat.jpg"
-              alt=""
-            />
+            <img className="Userpic" src={titlepic} alt="" />
             <div className="Usertext">
               <p className="projectName">{`用户名：${mainlist.userInfo?.nickname}`}</p>
               <p className="projectName">{`邮箱：${mainlist.userInfo?.email}`}</p>
